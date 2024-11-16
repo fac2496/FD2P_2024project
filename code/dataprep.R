@@ -31,4 +31,38 @@ raw_fastfood <- raw_fastfood %>%
 str(raw_fastfood) #all numeric except Company, Item
 sapply(raw_fastfood, function(x) sum(is.na(x))) #no NA values
 
- 
+
+##### DATASET 2: UK GOVERNMENT DIETARY RECOMMENCATIONS FOR ENERGY AND NUTRIENTS
+### Source: https://assets.publishing.service.gov.uk/media/5a749fece5274a44083b82d8/government_dietary_recommendations.pdf
+
+#Load
+raw_guideline <- read.csv("raw_data/UK_Nutrition.csv")
+
+#inspect
+head(raw_guideline)
+dim(raw_guideline) #19 rows, 13 columns
+names(raw_guideline)
+#[1]  "Age..years."                
+#[2]  "Gender"                     
+#[3]  "Energy..MJ.day."            
+#[4]  "Energy..kcal.day."          
+#[5]  "Protein..g.day."            
+#[6]  "Fat..g.day."                
+#[7]  "Saturated.fat..g.day."      
+#[8]  "Polyunsaturated.fat..g.day."
+#[9]  "Monounsaturated.fat..g.day."
+#[10] "Carbohydrate..g.day."       
+#[11] "Free.sugars..g.day."        
+#[12] "Salt..g.day."               
+#[13] "Fibre..g.day.."
+
+str(raw_guideline) #mix of chr, num, int. 
+
+#TODO: Switch 11/13 variables into numeric types
+
+raw_guideline <- raw_guideline %>%
+  mutate(across(-c(Age..years., Gender), ~as.numeric(replace_na(.,0))))
+
+#check
+str(raw_guideline) #all numeric except for age groups and Gender
+sapply(raw_guideline, function(x) sum(is.na(x))) #no NAs

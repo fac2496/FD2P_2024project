@@ -1,5 +1,3 @@
-library(shiny)
-
 ui <- fluidPage(
   titlePanel("FD2P Data Product"),
   sidebarLayout(
@@ -10,7 +8,18 @@ ui <- fluidPage(
       selectizeInput("item", "Choose an item:", choices = NULL, options = list(placeholder = 'Please scroll or type to select an item'))
     ),
     mainPanel(
-      plotOutput("barPlot")
+      fluidRow(
+        column(3, plotOutput("caloriesPlot")),
+        column(3, plotOutput("fatPlot")),
+        column(3, plotOutput("saturatedFatPlot")),
+        column(3, plotOutput("saltPlot"))
+      ),
+      fluidRow(
+        column(3, plotOutput("carbsPlot")),
+        column(3, plotOutput("fiberPlot")),
+        column(3, plotOutput("sugarsPlot")),
+        column(3, plotOutput("proteinPlot"))
+      )
     )
   )
 )
@@ -45,41 +54,44 @@ server <- function(input, output, session) {
     }
   })
   
-  output$barPlot <- renderPlot({
-    # Only render the plot if all inputs are selected
-    if (is.null(input$age) || is.null(input$gender) || 
-        is.null(input$restaurant) || input$restaurant == "" || 
-        is.null(input$item) || input$item == "") {
-      return(NULL)
-    }
-    
-    # Sample plot using selected input
-    selected_item <- input$item
-    item_data <- menu_data[menu_data$Item == selected_item & menu_data$Company == input$restaurant, ]
-    
-    # Ensure Energy..kcal.day. column is numeric
-    item_data$Energy..kcal.day. <- as.numeric(item_data$Energy..kcal.day.)
-    
-    # Check if item_data$Energy..kcal.day. is a vector
-    if (length(item_data$Energy..kcal.day.) == 0 || all(is.na(item_data$Energy..kcal.day.))) {
-      return(NULL)  # No valid data to plot
-    }
-    
-    # Extract recommended daily intake based on age and gender
-    recommended_intake <- guideline_data[guideline_data$Age..years. == input$age & guideline_data$Gender == input$gender, "Energy..kcal.day."]
-    
-    # Calculate the y-axis limit as 25% above the recommended intake
-    ylim_max <- recommended_intake * 1.25
-    
-    # Plot the bar plot
-    barplot(item_data$Energy..kcal.day., names.arg = selected_item, main = selected_item, col = "blue", ylim = c(0, ylim_max))
-    
-    # Add a dotted line for the recommended daily intake
-    abline(h = recommended_intake, col = "red", lwd = 2, lty = 2)
-    
-    # Add a legend
-    legend("topright", legend = c("Calories", "Recommended Daily Intake"), col = c("blue", "red"), lwd = 2, lty = c(1, 2), bty = "n")
-  })
+  # Function to create plots
+  createPlot <- function(column, plotTitle, color) {
+    renderPlot({
+      if (is.null(input$age) || is.null(input$gender) || 
+          is.null(input$restaurant) || input$restaurant == "" || 
+          is.null(input$item) || input$item == "") {
+        return(NULL)
+      }
+      
+      selected_item <- input$item
+      item_data <- menu_data[menu_data$Item == selected_item & menu_data$Company == input$restaurant, ]
+      
+      item_data[[column]] <- as.numeric(item_data[[column]])
+      
+      if (length(item_data[[column]]) == 0 || all(is.na(item_data[[column]]))) {
+        return(NULL)
+      }
+      
+      recommended_intake <- guideline_data[guideline_data$Age..years. == input$age & guideline_data$Gender == input$gender, column]
+      
+      ylim_max <- max(recommended_intake * 1.25, max(item_data[[column]], na.rm = TRUE) * 1.25, 0)
+      
+      barplot(item_data[[column]], names.arg = selected_item, main = plotTitle, col = color, ylim = c(0, ylim_max))
+      
+      abline(h = recommended_intake, col = "red", lwd = 2, lty = 2)
+      
+      legend("topright", legend = c(column, "Recommended Daily Intake"), col = c(color, "red"), lwd = 2, lty = c(1, 2), bty = "n")
+    })
+  }
+  
+  output$caloriesPlot <- createPlot("Energy..kcal.day.", "Calories", "blue")
+  output$fatPlot <- createPlot("Fat..g.day.", "Total Fat", "green")
+  output$saturatedFatPlot <- createPlot("Saturated.fat..g.day.", "Saturated Fat", "purple")
+  output$saltPlot <- createPlot("Salt..g.day.", "Salt", "orange")
+  output$carbsPlot <- createPlot("Carbohydrate..g.day.", "Carbohydrates", "yellow")
+  output$fiberPlot <- createPlot("Fibre..g.day..", "Fiber", "brown")
+  output$sugarsPlot <- createPlot("Free.sugars..g.day.", "Sugars", "pink")
+  output$proteinPlot <- createPlot("Protein..g.day.", "Protein", "cyan")
 }
 
 shinyApp(ui = ui, server = server)

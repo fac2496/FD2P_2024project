@@ -1,3 +1,6 @@
+library(shiny)
+library(dplyr)
+
 ui <- fluidPage(
   titlePanel("FD2P Data Product"),
   sidebarLayout(
@@ -26,15 +29,15 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   # Read the prepped CSV files
-  menu_data <- read.csv("/Users/felixculas/shiny/Project/fastfood_working_dataset.csv", header = TRUE)
-  guideline_data <- read.csv("/Users/felixculas/shiny/Project/guideline_working_set.csv", header = TRUE)
+  menu_data <- read.csv("/Users/felixculas/shiny/fd2p2024/processed_data/fastfood_workingset.csv", header = TRUE)
+  guideline_data <- read.csv("/Users/felixculas/shiny/fd2p2024/processed_data/guidelines_workingset.csv", header = TRUE)
   
   # Extract unique values for age and gender
-  unique_ages <- unique(guideline_data$Age..years.)
+  unique_ages <- unique(guideline_data$Age.Range)
   unique_genders <- unique(guideline_data$Gender)
   
   # Dynamically update age and gender choices
-  updateSelectInput(session, "age", choices = unique_ages, selected = NULL)
+  updateSelectInput(session, "age", choices = unique_ages, selected = "19-64")
   updateSelectInput(session, "gender", choices = unique_genders, selected = NULL)
   
   # Extract unique restaurants
@@ -72,26 +75,26 @@ server <- function(input, output, session) {
         return(NULL)
       }
       
-      recommended_intake <- guideline_data[guideline_data$Age..years. == input$age & guideline_data$Gender == input$gender, column]
+      recommended_intake <- guideline_data[guideline_data$Age.Range == input$age & guideline_data$Gender == input$gender, column]
       
       ylim_max <- max(recommended_intake * 1.25, max(item_data[[column]], na.rm = TRUE) * 1.25, 0)
       
-      barplot(item_data[[column]], names.arg = selected_item, main = plotTitle, col = color, ylim = c(0, ylim_max))
+      barplot(item_data[[column]], names.arg = NULL, main = plotTitle, col = color, ylim = c(0, ylim_max), las = 2)
       
       abline(h = recommended_intake, col = "red", lwd = 2, lty = 2)
       
-      legend("topright", legend = c(column, "Recommended Daily Intake"), col = c(color, "red"), lwd = 2, lty = c(1, 2), bty = "n")
+      legend("topright", inset = c(-0.2, 0), legend = c(column, "Recommended Daily Intake"), col = c(color, "red"), lwd = 2, lty = c(1, 2), bty = "n")
     })
   }
   
-  output$caloriesPlot <- createPlot("Energy..kcal.day.", "Calories", "blue")
-  output$fatPlot <- createPlot("Fat..g.day.", "Total Fat", "green")
-  output$saturatedFatPlot <- createPlot("Saturated.fat..g.day.", "Saturated Fat", "purple")
-  output$saltPlot <- createPlot("Salt..g.day.", "Salt", "orange")
-  output$carbsPlot <- createPlot("Carbohydrate..g.day.", "Carbohydrates", "yellow")
-  output$fiberPlot <- createPlot("Fibre..g.day..", "Fiber", "brown")
-  output$sugarsPlot <- createPlot("Free.sugars..g.day.", "Sugars", "pink")
-  output$proteinPlot <- createPlot("Protein..g.day.", "Protein", "cyan")
+  output$caloriesPlot <- createPlot("Calories", "Calories", "blue")
+  output$fatPlot <- createPlot("Total.Fat..g.", "Total Fat", "green")
+  output$saturatedFatPlot <- createPlot("Saturated.Fat..g.", "Saturated Fat", "purple")
+  output$saltPlot <- createPlot("Salt.g", "Salt", "orange")
+  output$carbsPlot <- createPlot("Carbs..g.", "Carbohydrates", "yellow")
+  output$fiberPlot <- createPlot("Fiber..g.", "Fiber", "brown")
+  output$sugarsPlot <- createPlot("Sugars..g.", "Sugars", "pink")
+  output$proteinPlot <- createPlot("Protein..g.", "Protein", "cyan")
 }
 
 shinyApp(ui = ui, server = server)

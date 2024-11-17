@@ -77,7 +77,21 @@ server <- function(input, output, session) {
       
       recommended_intake <- guideline_data[guideline_data$Age.Range == input$age & guideline_data$Gender == input$gender, column]
       
+      if (length(recommended_intake) == 0 || is.na(recommended_intake)) {
+        return(NULL)
+      }
+      
       ylim_max <- max(recommended_intake * 1.25, max(item_data[[column]], na.rm = TRUE) * 1.25, 0)
+      
+      # Check if the nutritional value exceeds the recommended intake
+      if (max(item_data[[column]], na.rm = TRUE) > recommended_intake) {
+        showModal(modalDialog(
+          title = "Nutritional Alert",
+          paste("The", plotTitle, "value exceeds the recommended daily intake!"),
+          easyClose = TRUE,
+          footer = NULL
+        ))
+      }
       
       barplot(item_data[[column]], names.arg = NULL, main = plotTitle, col = color, ylim = c(0, ylim_max), las = 2)
       

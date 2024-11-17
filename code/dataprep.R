@@ -36,11 +36,11 @@ sapply(raw_fastfood, function(x) sum(is.na(x))) #no NA values
 ### Source: https://assets.publishing.service.gov.uk/media/5a749fece5274a44083b82d8/government_dietary_recommendations.pdf
 
 #Load
-raw_guideline <- read.csv("raw_data/UK_Nutrition.csv")
+raw_guideline <- read.csv("raw_data/UK_Nutrition.csv", header = TRUE)
 
 #inspect
 head(raw_guideline)
-dim(raw_guideline) #19 rows, 13 columns
+dim(raw_guideline) #18 rows, 13 columns
 names(raw_guideline)
 #[1]  "Age..years."                
 #[2]  "Gender"                     
@@ -54,7 +54,9 @@ names(raw_guideline)
 #[10] "Carbohydrate..g.day."       
 #[11] "Free.sugars..g.day."        
 #[12] "Salt..g.day."               
-#[13] "Fibre..g.day.."
+#[13] "Fibre..g.day."
+
+head(raw_guideline$Fibre..g.day.)
 
 str(raw_guideline) #mix of chr, num, int. 
 
@@ -172,13 +174,13 @@ names(raw_guideline)
 # "Saturated.fat..g.day."       
 # "Carbohydrate..g.day."       
 # "Free.sugars..g.day."         "Salt..g.day."               
-# "Fibre..g.day.." 
+# "Fibre..g.day." 
 
 # Would prefer to standardise the names of the common variables between the two datasets.
 #TODO: Convert the names of common variables in Dataset 2 to the names in Dataset 1
 
 guideline_workingset <- raw_guideline %>%
-  select(Age..years., Gender, Energy..kcal.day., Protein..g.day., Fat..g.day., Saturated.fat..g.day., Carbohydrate..g.day., Free.sugars..g.day., Salt..g.day., Fibre..g.day..)
+  select(Age..years., Gender, Energy..kcal.day., Protein..g.day., Fat..g.day., Saturated.fat..g.day., Carbohydrate..g.day., Free.sugars..g.day., Salt..g.day., Fibre..g.day.)
 
 #Reference
 # "Calories"/ Energy..kcal.day 
@@ -191,19 +193,6 @@ guideline_workingset <- raw_guideline %>%
 # "Protein..g."/ "Protein..g.day."
 
 
-rename_vector <- c(
-  "Age..years." = "Age.Range", 
-  "Gender" = "Gender",
-  "Energy..kcal.day" = "Calories", 
-  "Fat..g.day." = "Total.Fat..g.",
-  "Saturated.fat..g.day." = "Saturated.Fat..g.",
-  "Salt..g.day." = "Salt.g",
-  "Carbohydrate..g.day." = "Carbs..g.",
-  "Fibre..g.day.." = "Fiber..g.",
-  "Free.sugars..g.day." = "Sugars..g.",
-  "Protein..g.day." = "Protein..g."
-)
-
 guideline_workingset <- guideline_workingset %>%
   rename("Age.Range" = "Age..years.", 
          "Gender" = "Gender",
@@ -212,9 +201,14 @@ guideline_workingset <- guideline_workingset %>%
          "Saturated.Fat..g." = "Saturated.fat..g.day.",
          "Salt.g" = "Salt..g.day.",
          "Carbs..g." = "Carbohydrate..g.day.",
-         "Fiber..g." = "Fibre..g.day..",
+         "Fiber..g." = "Fibre..g.day.",
          "Sugars..g." = "Free.sugars..g.day.",
          "Protein..g." ="Protein..g.day.")
 
 #check
 colnames(guideline_workingset)
+
+#save working set in 'processed data' folder
+
+filesave <- "/Users/felixculas/shiny/fd2p2024/processed_data/guidelines_workingset.csv"
+write.csv(guideline_workingset, filesave, row.names = FALSE)

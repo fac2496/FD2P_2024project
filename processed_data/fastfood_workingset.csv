@@ -445,56 +445,56 @@ Calorie Sweetener",0,0,0,1,0,1,0,0
 "Burger King","Vanilla Milk Shake",580,15,10,98,0,85,14,1.05
 "Burger King","HERSHEY®’S Chocolate Milk Shake",610,16,10,103,1,88,14,1.25
 "Burger King","Strawberry Milk Shake",640,15,10,113,0,99,14,1.1
-"Burger King","Coca Cola classic®‡",0,0,0,0,0,0,0,0
+"Burger King","Coca Cola classic®‡",NA,NA,NA,NA,NA,NA,NA,NA
 "Burger King","16 fl oz",210,0,0,58,0,58,0,0.125
 "Burger King","20 fl oz",270,0,0,73,0,73,0,0.15
 "Burger King","29 fl oz",290,0,0,105,0,105,0,0.2125
 "Burger King","38 fl oz",510,0,0,138,0,138,0,0.2875
-"Burger King","Diet Coke®‡",0,0,0,0,0,0,0,0
+"Burger King","Diet Coke®‡",NA,NA,NA,NA,NA,NA,NA,NA
 "Burger King","16 fl oz",0,0,0,0,0,0,0,0.175
 "Burger King","20 fl oz",0,0,0,0,0,0,0,0.2125
 "Burger King","29 fl oz",0,0,0,0,0,0,0,0.3
 "Burger King","38 fl oz",0,0,0,0,0,0,0,0.4
-"Burger King","Sprite®‡",0,0,0,0,0,0,0,0
+"Burger King","Sprite®‡",NA,NA,NA,NA,NA,NA,NA,NA
 "Burger King","16 fl oz",210,0,0,56,0,56,0,0.2375
 "Burger King","20 fl oz",260,0,0,70,0,70,0,0.3
 "Burger King","29 fl oz",380,0,0,102,0,102,0,0.425
 "Burger King","38 fl oz",500,0,0,133,0,133,0,0.575
-"Burger King","Dr. Pepper®‡",0,0,0,0,0,0,0,0
+"Burger King","Dr. Pepper®‡",NA,NA,NA,NA,NA,NA,NA,NA
 "Burger King","16 fl oz",190,0,0,52,0,51,0,0.15
 "Burger King","20 fl oz",240,0,0,65,0,64,0,0.1875
 "Burger King","29 fl oz",350,0,0,94,0,93,0,0.2625
 "Burger King","38 fl oz",450,0,0,124,0,121,0,0.35
-"Burger King","Barq’s® Root Beer‡",0,0,0,0,0,0,0,0
+"Burger King","Barq’s® Root Beer‡",NA,NA,NA,NA,NA,NA,NA,NA
 "Burger King","16 fl oz",240,0,0,65,0,65,0,0.25
 "Burger King","20 fl oz",300,0,0,81,0,81,0,0.3
 "Burger King","29 fl oz",350,0,0,118,0,118,0,0.45
 "Burger King","38 fl oz",450,0,0,155,0,155,0,0.575
-"Burger King","Cherry Coke®‡",0,0,0,0,0,0,0,0
+"Burger King","Cherry Coke®‡",NA,NA,NA,NA,NA,NA,NA,NA
 "Burger King","16 fl oz",220,0,0,61,0,61,0,0.1375
 "Burger King","20 fl oz",280,0,0,76,0,76,0,0.175
 "Burger King","29 fl oz",410,0,0,110,0,110,0,0.25
 "Burger King","38 fl oz",450,0,0,145,0,145,0,0.325
-"Burger King","Fanta® Orange‡",0,0,0,0,0,0,0,0
+"Burger King","Fanta® Orange‡",NA,NA,NA,NA,NA,NA,NA,NA
 "Burger King","16 fl oz",230,0,0,62,0,61,0,0.15
 "Burger King","20 fl oz",280,0,0,78,0,77,0,0.175
 "Burger King","29 fl oz",410,0,0,113,0,111,0,0.2625
 "Burger King","38 fl oz",530,0,0,148,0,146,0,0.3375
-"Burger King","Hi-C® Fruit Punch‡",0,0,0,0,0,0,0,0
+"Burger King","Hi-C® Fruit Punch‡",NA,NA,NA,NA,NA,NA,NA,NA
 "Burger King","16 fl oz",220,0,0,62,0,60,0,0.1875
 "Burger King","20 fl oz",280,0,0,77,0,75,0,0.2375
 "Burger King","29 fl oz",410,0,0,111,0,109,0,0.3375
 "Burger King","38 fl oz",450,0,0,146,0,143,0,0.45
-"Burger King","MINUTE MAID® Light Lemonade",0,0,0,0,0,0,0,0
+"Burger King","MINUTE MAID® Light Lemonade",NA,NA,NA,NA,NA,NA,NA,NA
 "Burger King","16 fl oz",10,0,0,3,0,0,0,0.15
 "Burger King","20 fl oz",10,0,0,4,0,0,0,0.175
 "Burger King","29 fl oz",15,0,0,5,0,0,0,0.2625
 "Burger King","38 fl oz",20,0,0,7,0,0,0,0.3375
-"Burger King","Sweet Tea",0,0,0,0,0,0,0,0
+"Burger King","Sweet Tea",NA,NA,NA,NA,NA,NA,NA,NA
 "Burger King","20 fl oz",120,0,0,35,0,35,0,0
 "Burger King","29 fl oz",160,0,0,49,0,49,0,0
 "Burger King","40 fl oz",240,0,0,71,0,71,0,0
-"Burger King","Unsweetened Tea",0,0,0,0,0,0,0,0
+"Burger King","Unsweetened Tea",NA,NA,NA,NA,NA,NA,NA,NA
 "Burger King","20 fl oz",0,0,0,0,0,0,0,0
 "Burger King","29 fl oz",0,0,0,0,0,0,0,0
 "Burger King","40 fl oz",0,0,0,0,0,0,0,0
@@ -702,8 +702,8 @@ Calorie Sweetener",0,0,0,1,0,1,0,0
 "KFC","SPICY CRISPY CHICKEN Drumstick",130,8,1.5,5,1,0,9,1.05
 "KFC","SPICY CRISPY CHICKEN Thigh",270,20,3.5,10,1,0,13,1.8
 "KFC","SPICY CRISPY CHICKEN Whole Wing",120,8,1.5,5,0,0,7,0.875
-"KFC","EXTRA CRISPY  Tender (each)",260,14,2,15,0,0,19,1.525
-"KFC","EXTRA CRISPY  Tender (each)",220,16,2.5,9,0,0,10,1.15
+"KFC","EXTRA CRISPY  Tender (each)",260,14,2,15,NA,0,19,1.525
+"KFC","EXTRA CRISPY  Tender (each)",220,16,2.5,9,NA,0,10,1.15
 "KFC","KENTUCKY FRIED WINGS Buffalo",100,7,1.5,3,0,0,5,0.775
 "KFC","KENTUCKY FRIED WINGS Honey BBQ",100,6,1,8,0,4,5,0.525
 "KFC","KENTUCKY FRIED WINGS Nashville Hot",130,11,2,4,0,0,5,0.575
@@ -715,7 +715,7 @@ Calorie Sweetener",0,0,0,1,0,1,0,0
 "KFC","Coleslaw",170,12,2,14,4,10,1,0.45
 "KFC","Corn on the Cob",70,0.5,0,17,2,3,2,0
 "KFC","Green Beans",25,0,0,5,3,1,1,0.75
-"KFC","KFC® Cornbread Muffin",210,9,1.5,28,0,11,3,0.6
+"KFC","KFC® Cornbread Muffin",210,9,1.5,28,NA,11,3,0.6
 "KFC","Macaroni & Cheese",140,6,1.5,17,1,2,5,1.475
 "KFC","Macaroni Salad",140,8,1,14,0,9,1,0.725
 "KFC","Mashed Potatoes",110,3.5,0.5,17,1,0,2,0.825
@@ -739,10 +739,10 @@ Calorie Sweetener",0,0,0,1,0,1,0,0
 "KFC","Chicken Littles – Honey BBQ",320,15,2.5,31,1,7,14,1.7
 "KFC","Chicken Littles – Nashville Hot",340,19,3,27,1,3,14,1.7
 "KFC","Classic Chicken Sandwich",650,35,4.5,49,1,6,34,3.15
-"KFC","Crispy Colonel’s Sandwich",470,24,3.5,39,0,4,24,2.925
-"KFC","Crispy Colonel’s Sandwich – Buffalo",500,27,4,39,0,4,24,3.75
-"KFC","Crispy Colonel’s Sandwich – Honey BBQ",510,25,3.5,48,0,12,24,3.225
-"KFC","Crispy Colonel’s Sandwich – Nashville Hot",540,32,4.5,40,0,5,24,3.225
+"KFC","Crispy Colonel’s Sandwich",470,24,3.5,39,NA,4,24,2.925
+"KFC","Crispy Colonel’s Sandwich – Buffalo",500,27,4,39,NA,4,24,3.75
+"KFC","Crispy Colonel’s Sandwich – Honey BBQ",510,25,3.5,48,NA,12,24,3.225
+"KFC","Crispy Colonel’s Sandwich – Nashville Hot",540,32,4.5,40,NA,5,24,3.225
 "KFC","Crispy Twister®",630,34,7,53,4,3,28,3.15
 "KFC","Honey BBQ Sandwich",350,3.5,0.5,55,2,22,24,3.375
 "KFC","Spicy Chicken Sandwich",620,33,4,49,1,6,34,5.35
@@ -755,8 +755,8 @@ Calorie Sweetener",0,0,0,1,0,1,0,0
 "KFC","Hidden Valley The Original Ranch Fat Free Dressing",35,0,0,8,0,2,1,1.025
 "KFC","KFC® Creamy Parmesan Caesar Dressing",260,26,5,4,0,2,2,1.35
 "KFC","Marzetti Light Italian Dressing",15,0.5,0,2,0,1,0,1.275
-"KFC","Parmesan Garlic Croutons",60,3,0,8,0,0,2,0.3375
-"KFC","Apple Turnover",230,10,2.5,32,0,12,2,0.35
+"KFC","Parmesan Garlic Croutons",60,3,0,8,NA,0,2,0.3375
+"KFC","Apple Turnover",230,10,2.5,32,NA,12,2,0.35
 "KFC","Café Valley Chocolate Chip Cake (1 Slice)",300,15,3,39,1,27,4,0.65
 "KFC","Café Valley Lemon Cake (1 Slice)",220,10,2,30,0,20,2,0.425
 "KFC","Café Valley Mini Chocolate Chip Cake",300,12,2.5,49,1,35,3,0.475
@@ -889,7 +889,7 @@ Calorie Sweetener",0,0,0,1,0,1,0,0
 "KFC","Wild Cherry Pepsi® (30 fl oz)",390,0,0,105,0,105,0,0.2
 "KFC","Country Fried Steak without Peppered White Gravy",360,24,7,22,2,0,13,1.875
 "KFC","Country Fried Steak with Peppered White Gravy",390,26,7,26,2,0,13,2.275
-"KFC","KFC® Gizzards",300,16,2,18,0,0,20,1.925
+"KFC","KFC® Gizzards",300,16,2,18,NA,0,20,1.925
 "KFC","KFC® Livers",230,13,2.5,12,0,0,17,1.875
 "Taco Bell","Bacon Club Chalupa",440,27,5,31,2,3,20,2.1
 "Taco Bell","Blue Raspberry Freeze™ (16 oz)",120,0,0,30,0,30,0,0.0875
@@ -906,14 +906,14 @@ Calorie Sweetener",0,0,0,1,0,1,0,0
 "Taco Bell","Chalupa Supreme® – Chicken",330,15,3.5,31,2,3,16,1.4
 "Taco Bell","Chalupa Supreme® – Steak",330,16,4,32,2,3,15,1.325
 "Taco Bell","Cheesy Gordita Crunch",500,28,10,41,5,4,20,2.125
-"Taco Bell","Crunchy Taco",170,9,3.5,13,3,0,8,0.775
+"Taco Bell","Crunchy Taco",170,9,3.5,13,3,NA,8,0.775
 "Taco Bell","Crunchy Taco Supreme®",190,11,4.5,15,3,2,8,0.85
 "Taco Bell","Loaded Nacho Taco (New)",250,12,4.5,24,3,2,10,1.525
-"Taco Bell","Nacho Cheese Doritos® Locos Taco",170,9,3.5,13,3,0,8,0.9
+"Taco Bell","Nacho Cheese Doritos® Locos Taco",170,9,3.5,13,3,NA,8,0.9
 "Taco Bell","Nacho Cheese Doritos® Locos Taco Supreme®",190,11,4.5,15,3,2,8,0.95
 "Taco Bell","Soft Taco – Beef",180,9,4,17,3,1,9,1.25
 "Taco Bell","Soft Taco – Chicken",160,5,2.5,16,1,1,12,1.25
-"Taco Bell","Soft Taco Supreme®",0,0,0,0,0,0,0,0
+"Taco Bell","Soft Taco Supreme®",NA,NA,NA,NA,NA,NA,NA,NA
 "Taco Bell","Soft Taco – Beef",210,10,5,20,3,2,10,1.3
 "Taco Bell","Soft Taco – Chicken",180,7,3.5,18,2,2,13,1.3
 "Taco Bell","Bean Burrito (V)",350,9,3.5,54,11,3,13,2.5
@@ -942,10 +942,10 @@ Calorie Sweetener",0,0,0,1,0,1,0,0
 "Taco Bell","Black Bean Quesarito – Specialties",630,29,10,73,7,5,19,3.15
 "Taco Bell","Chalupa Supreme® – Specialties",350,18,5,33,4,3,13,1.4
 "Taco Bell","Cheesy Gordita Crunch – Specialties",500,28,10,41,5,4,20,2.125
-"Taco Bell","Cheesy Roll Up – Specialties",180,9,5,15,2,0,9,1.075
+"Taco Bell","Cheesy Roll Up – Specialties",180,9,5,15,2,NA,9,1.075
 "Taco Bell","Crunchwrap Supreme® – Specialties",530,21,6,71,6,6,16,3
-"Taco Bell","Crunchy Taco – Specialties",170,9,3.5,13,3,0,8,0.775
-"Taco Bell","Nacho Cheese Doritos® Locos Taco – Specialties",170,9,3.5,13,3,0,8,0.9
+"Taco Bell","Crunchy Taco – Specialties",170,9,3.5,13,3,NA,8,0.775
+"Taco Bell","Nacho Cheese Doritos® Locos Taco – Specialties",170,9,3.5,13,3,NA,8,0.9
 "Taco Bell","Nachos BellGrande® – Specialties",740,38,7,82,15,5,16,2.625
 "Taco Bell","Power Menu Bowl – Specialties",470,19,6,50,7,2,26,3
 "Taco Bell","Quesadilla – Specialties",510,26,12,38,4,2,27,3.125
@@ -957,7 +957,7 @@ Calorie Sweetener",0,0,0,1,0,1,0,0
 "Taco Bell","Black Beans (V)",50,1,0,8,3,0,2,0.3375
 "Taco Bell","Cinnabon® Delights™ (2 Pk) (V)",160,9,2,17,0,10,2,0.2
 "Taco Bell","Cinnabon® Delights™ (12 Pk – Serves 4) (V)",930,53,13,104,3,59,9,1.2
-"Taco Bell","Cinnamon Twists (V)",170,6,0,27,0,13,1,0.525
+"Taco Bell","Cinnamon Twists (V)",170,6,0,27,NA,13,1,0.525
 "Taco Bell","Diablo Sauce Packet (V)",0,0,0,0,0,0,0,0.075
 "Taco Bell","Fire Sauce Packet (V)",0,0,0,0,0,0,0,0.1375
 "Taco Bell","Hot Sauce Packet (V)",0,0,0,0,0,0,0,0.1125
@@ -972,7 +972,7 @@ Calorie Sweetener",0,0,0,1,0,1,0,0
 "Taco Bell","Midnight Berry Freeze™ (20 oz) (New)",170,0,0,43,0,42,0,0.1
 "Taco Bell","Mtn Dew® Baja Blast Freeze™ (16 oz)",150,0,0,41,0,41,0,0.1125
 "Taco Bell","Mtn Dew® Baja Blast Freeze™ (20 oz)",190,0,0,51,0,51,0,0.1375
-"Taco Bell","Orange Juice",140,0,0,33,0,28,2,0.05
+"Taco Bell","Orange Juice",140,0,0,33,NA,28,2,0.05
 "Taco Bell","Premium Hot Coffee",10,0,0,0,0,0,2,0
 "Taco Bell","Regular Iced Coffee",10,0,0,0,0,0,2,0
 "Taco Bell","Water",0,0,0,0,0,0,0,0
@@ -980,10 +980,10 @@ Calorie Sweetener",0,0,0,1,0,1,0,0
 "Taco Bell","Wild Strawberry Freeze™ (20 oz)",190,0,0,51,0,51,0,0.1375
 "Taco Bell","Beef Burrito – Value Menu",430,19,5,51,4,3,12,2.425
 "Taco Bell","Cheesy Bean & Rice Burrito – Value Menu",420,16,4,56,7,3,10,2.2
-"Taco Bell","Cheesy Roll Up – Value Menu",180,9,5,15,2,0,9,1.075
-"Taco Bell","Chicken Chipotle Melt – Value Menu",190,9,3,15,1,0,12,1.325
+"Taco Bell","Cheesy Roll Up – Value Menu",180,9,5,15,2,NA,9,1.075
+"Taco Bell","Chicken Chipotle Melt – Value Menu",190,9,3,15,1,NA,12,1.325
 "Taco Bell","Chips and Nacho Cheese Sauce – Value Menu",220,13,1.5,24,2,2,2,0.625
-"Taco Bell","Cinnamon Twists – Value Menu",170,6,0,27,0,13,1,0.525
+"Taco Bell","Cinnamon Twists – Value Menu",170,6,0,27,NA,13,1,0.525
 "Taco Bell","Loaded Nacho Taco – Value Menu",250,12,4.5,24,3,2,10,1.525
 "Taco Bell","Bean Burrito",350,9,3.5,54,11,3,13,2.5
 "Taco Bell","Black Bean Chalupa",330,15,3,39,5,3,10,1.075
@@ -992,11 +992,11 @@ Calorie Sweetener",0,0,0,1,0,1,0,0
 "Taco Bell","Black Beans & Rice",170,3.5,0,31,4,0,4,0.8
 "Taco Bell","Cheese Quesadilla",470,25,12,37,4,2,19,2.475
 "Taco Bell","Cheesy Bean & Rice Burrito",420,16,4,56,7,3,10,2.2
-"Taco Bell","Cheesy Roll Up",180,9,5,15,2,0,9,1.075
+"Taco Bell","Cheesy Roll Up",180,9,5,15,2,NA,9,1.075
 "Taco Bell","Chips and Nacho Cheese Sauce",220,13,1.5,24,2,2,2,0.625
 "Taco Bell","Cinnabon® Delights™ (2 Pack)",160,9,2,17,0,10,2,0.2
 "Taco Bell","Cinnabon® Delights™ (12 Pack – Serves 4)",930,53,13,104,3,59,9,1.2
-"Taco Bell","Cinnamon Twists",170,6,0,27,0,13,1,0.525
+"Taco Bell","Cinnamon Twists",170,6,0,27,NA,13,1,0.525
 "Taco Bell","Hash Brown",160,12,1,13,2,0,1,0.675
 "Taco Bell","Power Menu Bowl – Veggie",430,17,5,57,10,2,12,2.025
 "Taco Bell","Power Menu Bowl – Chicken",470,19,6,50,7,2,26,3
@@ -1005,7 +1005,7 @@ Calorie Sweetener",0,0,0,1,0,1,0,0
 "Taco Bell","Breakfast Crunchwrap – Bacon",670,41,12,50,4,3,21,3.175
 "Taco Bell","Breakfast Crunchwrap – Sausage",720,47,15,51,4,3,21,3.025
 "Taco Bell","Breakfast Crunchwrap – Steak",660,38,12,51,4,3,24,3.25
-"Taco Bell","Breakfast Salsa Packet (V)",0,0,0,0,0,0,0,0.125
+"Taco Bell","Breakfast Salsa Packet (V)",0,0,0,NA,0,0,0,0.125
 "Taco Bell","Cheesy Toasted Breakfast Burrito – Bacon",350,16,4.5,36,2,3,13,2.175
 "Taco Bell","Cheesy Toasted Breakfast Burrito – Fiesta Potato (V)",340,14,3.5,43,3,3,10,1.875
 "Taco Bell","Cheesy Toasted Breakfast Burrito – Sausage",340,17,5,36,2,3,11,1.825
@@ -1018,62 +1018,62 @@ Calorie Sweetener",0,0,0,1,0,1,0,0
 "Taco Bell","Hash Brown Toasted Breakfast Burrito – Bacon",570,33,10,49,4,2,21,3.175
 "Taco Bell","Hash Brown Toasted Breakfast Burrito – Sausage",570,34,10,49,4,2,18,2.825
 "Taco Bell","Hash Brown Toasted Breakfast Burrito – Steak",570,30,9,50,4,2,24,3.225
-"Taco Bell","7-Up (16 fl oz)",190,0,0,0,0,46,0,0.115
-"Taco Bell","Brisk® Mango Iced Tea (16 fl oz)",100,0,0,0,0,26,0,0.065
-"Taco Bell","Brisk® Unsweetened No Lemon Iced Tea (16 fl oz)",0,0,0,0,0,0,0,0
-"Taco Bell","Diet Dr Pepper® (16 fl oz)",0,0,0,0,0,0,0,0
-"Taco Bell","Diet Mtn Dew® (16 fl oz)",5,0,0,0,0,1,0,0.0025
-"Taco Bell","Diet Pepsi® (16 fl oz)",0,0,0,0,0,0,0,0
-"Taco Bell","Dr Pepper® (16 fl oz)",190,0,0,0,0,51,0,0.13
-"Taco Bell","G2 – Fruit Punch (16 fl oz)",30,0,0,0,0,6,0,0.0175
-"Taco Bell","Mtn Dew® (16 fl oz)",220,0,0,0,0,58,0,0.1475
-"Taco Bell","Mtn Dew® Baja Blast™ (16 fl oz)",220,0,0,0,0,59,0,0.1475
-"Taco Bell","Mtn Dew® Baja Blast Zero Sugar (16 fl oz)",5,0,0,0,0,0,0,0
-"Taco Bell","Mtn Dew® Kickstart™ Orange Citrus (16 fl oz)",70,0,0,0,0,18,0,0.045
-"Taco Bell","Mug® Root Beer (16 fl oz)",190,0,0,0,0,52,0,0.13
-"Taco Bell","Pepsi® (16 fl oz)",200,0,0,0,0,55,0,0.1375
-"Taco Bell","Pepsi® Wild Cherry (16 fl oz)",210,0,0,0,0,56,0,0.14
-"Taco Bell","Pepsi® Zero Sugar (16 fl oz)",0,0,0,0,0,0,0,0
-"Taco Bell","Sierra Mist® (16 fl oz)",200,0,0,0,0,54,0,0.135
-"Taco Bell","Tropicana® Pink Lemonade (16 fl oz)",210,0,0,0,0,53,0,0.1325
-"Taco Bell","7-Up (20 fl oz)",240,0,0,0,0,58,0,0.145
-"Taco Bell","Brisk® Mango Iced Tea (20 fl oz)",120,0,0,0,0,32,0,0.08
-"Taco Bell","Brisk® Unsweetened No Lemon Iced Tea (20 fl oz)",0,0,0,0,0,0,0,0
-"Taco Bell","Diet Dr Pepper® (20 fl oz)",0,0,0,0,0,0,0,0
-"Taco Bell","Diet Mtn Dew® (20 fl oz)",10,0,0,0,0,1,0,0.0025
-"Taco Bell","Diet Pepsi® (20 fl oz)",0,0,0,0,0,0,0,0
-"Taco Bell","Dr Pepper® (20 fl oz)",240,0,0,0,0,64,0,0.1625
-"Taco Bell","G2 – Fruit Punch (20 fl oz)",35,0,0,0,0,8,0,0.0225
-"Taco Bell","Mtn Dew® (20 fl oz)",270,0,0,0,0,73,0,0.1825
-"Taco Bell","Mtn Dew® Baja Blast™ (20 fl oz)",280,0,0,0,0,73,0,0.185
-"Taco Bell","Mtn Dew® Baja Blast Zero Sugar (20 fl oz)",10,0,0,0,0,0,0,0
-"Taco Bell","Mtn Dew® Kickstart™ Orange Citrus (20 fl oz)",90,0,0,0,0,22,0,0.0575
-"Taco Bell","Mug® Root Beer (20 fl oz)",240,0,0,0,0,65,0,0.1625
-"Taco Bell","Pepsi® (20 fl oz)",250,0,0,0,0,69,0,0.1725
-"Taco Bell","Pepsi® Wild Cherry (20 fl oz)",260,0,0,0,0,70,0,0.175
-"Taco Bell","Pepsi® Zero Sugar (20 fl oz)",0,0,0,0,0,0,0,0
-"Taco Bell","Sierra Mist® (20 fl oz)",260,0,0,0,0,68,0,0.17
-"Taco Bell","Tropicana® Pink Lemonade (20 fl oz)",260,0,0,0,0,67,0,0.1675
-"Taco Bell"," ",0,0,0,0,0,0,0,0
-"Taco Bell","FOUNTAIN BEVERAGES (30 OZ)",0,0,0,0,0,0,0,0
-"Taco Bell","7-Up (30 fl oz)",350,0,0,0,0,87,0,0.2175
-"Taco Bell","Brisk® Mango Iced Tea (30 fl oz)",180,0,0,0,0,48,0,0.12
-"Taco Bell","Brisk® Unsweetened No Lemon Iced Tea (30 fl oz)",0,0,0,0,0,0,0,0
-"Taco Bell","Diet Dr Pepper® (30 fl oz)",0,0,0,0,0,0,0,0.0025
-"Taco Bell","Diet Mtn Dew® (30 fl oz)",10,0,0,0,0,1,0,0.0025
-"Taco Bell","Diet Pepsi® (30 fl oz)",0,0,0,0,0,0,0,0
-"Taco Bell","Dr Pepper® (30 fl oz)",360,0,0,0,0,96,0,0.245
-"Taco Bell","G2 – Fruit Punch (30 fl oz)",50,0,0,0,0,12,0,0.0325
-"Taco Bell","Mtn Dew® (30 fl oz)",410,0,0,0,0,109,0,0.275
-"Taco Bell","Mtn Dew® Baja Blast™ (30 fl oz)",420,0,0,0,0,110,0,0.275
-"Taco Bell","Mtn Dew® Baja Blast Zero Sugar (30 fl oz)",15,0,0,0,0,0,0,0
-"Taco Bell","Mtn Dew® Kickstart™ Orange Citrus (30 fl oz)",130,0,0,0,0,33,0,0.085
-"Taco Bell","Mug® Root Beer (30 fl oz)",360,0,0,0,0,98,0,0.245
-"Taco Bell","Pepsi® (30 fl oz)",380,0,0,0,0,103,0,0.26
-"Taco Bell","Pepsi® Wild Cherry (30 fl oz)",390,0,0,0,0,105,0,0.2625
-"Taco Bell","Pepsi® Zero Sugar (30 fl oz)",0,0,0,0,0,0,0,0
-"Taco Bell","Sierra Mist® (30 fl oz)",380,0,0,0,0,101,0,0.2525
-"Taco Bell","Tropicana® Pink Lemonade (30 fl oz)",390,0,0,0,0,100,0,0.25
+"Taco Bell","7-Up (16 fl oz)",190,NA,NA,NA,NA,46,NA,0.115
+"Taco Bell","Brisk® Mango Iced Tea (16 fl oz)",100,NA,NA,NA,NA,26,NA,0.065
+"Taco Bell","Brisk® Unsweetened No Lemon Iced Tea (16 fl oz)",0,NA,NA,NA,NA,0,NA,0
+"Taco Bell","Diet Dr Pepper® (16 fl oz)",0,NA,NA,NA,NA,0,NA,0
+"Taco Bell","Diet Mtn Dew® (16 fl oz)",5,NA,NA,NA,NA,1,NA,0.0025
+"Taco Bell","Diet Pepsi® (16 fl oz)",0,NA,NA,NA,NA,0,NA,0
+"Taco Bell","Dr Pepper® (16 fl oz)",190,NA,NA,NA,NA,51,NA,0.13
+"Taco Bell","G2 – Fruit Punch (16 fl oz)",30,NA,NA,NA,NA,6,NA,0.0175
+"Taco Bell","Mtn Dew® (16 fl oz)",220,NA,NA,NA,NA,58,NA,0.1475
+"Taco Bell","Mtn Dew® Baja Blast™ (16 fl oz)",220,NA,NA,NA,NA,59,NA,0.1475
+"Taco Bell","Mtn Dew® Baja Blast Zero Sugar (16 fl oz)",5,NA,NA,NA,NA,0,NA,0
+"Taco Bell","Mtn Dew® Kickstart™ Orange Citrus (16 fl oz)",70,NA,NA,NA,NA,18,NA,0.045
+"Taco Bell","Mug® Root Beer (16 fl oz)",190,NA,NA,NA,NA,52,NA,0.13
+"Taco Bell","Pepsi® (16 fl oz)",200,NA,NA,NA,NA,55,NA,0.1375
+"Taco Bell","Pepsi® Wild Cherry (16 fl oz)",210,NA,NA,NA,NA,56,NA,0.14
+"Taco Bell","Pepsi® Zero Sugar (16 fl oz)",0,NA,NA,NA,NA,0,NA,0
+"Taco Bell","Sierra Mist® (16 fl oz)",200,NA,NA,NA,NA,54,NA,0.135
+"Taco Bell","Tropicana® Pink Lemonade (16 fl oz)",210,NA,NA,NA,NA,53,NA,0.1325
+"Taco Bell","7-Up (20 fl oz)",240,NA,NA,NA,NA,58,NA,0.145
+"Taco Bell","Brisk® Mango Iced Tea (20 fl oz)",120,NA,NA,NA,NA,32,NA,0.08
+"Taco Bell","Brisk® Unsweetened No Lemon Iced Tea (20 fl oz)",0,NA,NA,NA,NA,0,NA,0
+"Taco Bell","Diet Dr Pepper® (20 fl oz)",0,NA,NA,NA,NA,0,NA,0
+"Taco Bell","Diet Mtn Dew® (20 fl oz)",10,NA,NA,NA,NA,1,NA,0.0025
+"Taco Bell","Diet Pepsi® (20 fl oz)",0,NA,NA,NA,NA,0,NA,0
+"Taco Bell","Dr Pepper® (20 fl oz)",240,NA,NA,NA,NA,64,NA,0.1625
+"Taco Bell","G2 – Fruit Punch (20 fl oz)",35,NA,NA,NA,NA,8,NA,0.0225
+"Taco Bell","Mtn Dew® (20 fl oz)",270,NA,NA,NA,NA,73,NA,0.1825
+"Taco Bell","Mtn Dew® Baja Blast™ (20 fl oz)",280,NA,NA,NA,NA,73,NA,0.185
+"Taco Bell","Mtn Dew® Baja Blast Zero Sugar (20 fl oz)",10,NA,NA,NA,NA,0,NA,0
+"Taco Bell","Mtn Dew® Kickstart™ Orange Citrus (20 fl oz)",90,NA,NA,NA,NA,22,NA,0.0575
+"Taco Bell","Mug® Root Beer (20 fl oz)",240,NA,NA,NA,NA,65,NA,0.1625
+"Taco Bell","Pepsi® (20 fl oz)",250,NA,NA,NA,NA,69,NA,0.1725
+"Taco Bell","Pepsi® Wild Cherry (20 fl oz)",260,NA,NA,NA,NA,70,NA,0.175
+"Taco Bell","Pepsi® Zero Sugar (20 fl oz)",0,NA,NA,NA,NA,0,NA,0
+"Taco Bell","Sierra Mist® (20 fl oz)",260,NA,NA,NA,NA,68,NA,0.17
+"Taco Bell","Tropicana® Pink Lemonade (20 fl oz)",260,NA,NA,NA,NA,67,NA,0.1675
+"Taco Bell"," ",NA,NA,NA,NA,NA,NA,NA,NA
+"Taco Bell","FOUNTAIN BEVERAGES (30 OZ)",NA,NA,NA,NA,NA,NA,NA,NA
+"Taco Bell","7-Up (30 fl oz)",350,NA,NA,NA,NA,87,NA,0.2175
+"Taco Bell","Brisk® Mango Iced Tea (30 fl oz)",180,NA,NA,NA,NA,48,NA,0.12
+"Taco Bell","Brisk® Unsweetened No Lemon Iced Tea (30 fl oz)",0,NA,NA,NA,NA,0,NA,0
+"Taco Bell","Diet Dr Pepper® (30 fl oz)",0,NA,NA,NA,NA,0,NA,0.0025
+"Taco Bell","Diet Mtn Dew® (30 fl oz)",10,NA,NA,NA,NA,1,NA,0.0025
+"Taco Bell","Diet Pepsi® (30 fl oz)",0,NA,NA,NA,NA,0,NA,0
+"Taco Bell","Dr Pepper® (30 fl oz)",360,NA,NA,NA,NA,96,NA,0.245
+"Taco Bell","G2 – Fruit Punch (30 fl oz)",50,NA,NA,NA,NA,12,NA,0.0325
+"Taco Bell","Mtn Dew® (30 fl oz)",410,NA,NA,NA,NA,109,NA,0.275
+"Taco Bell","Mtn Dew® Baja Blast™ (30 fl oz)",420,NA,NA,NA,NA,110,NA,0.275
+"Taco Bell","Mtn Dew® Baja Blast Zero Sugar (30 fl oz)",15,NA,NA,NA,NA,0,NA,0
+"Taco Bell","Mtn Dew® Kickstart™ Orange Citrus (30 fl oz)",130,NA,NA,NA,NA,33,NA,0.085
+"Taco Bell","Mug® Root Beer (30 fl oz)",360,NA,NA,NA,NA,98,NA,0.245
+"Taco Bell","Pepsi® (30 fl oz)",380,NA,NA,NA,NA,103,NA,0.26
+"Taco Bell","Pepsi® Wild Cherry (30 fl oz)",390,NA,NA,NA,NA,105,NA,0.2625
+"Taco Bell","Pepsi® Zero Sugar (30 fl oz)",0,NA,NA,NA,NA,0,NA,NA
+"Taco Bell","Sierra Mist® (30 fl oz)",380,NA,NA,NA,NA,101,NA,0.2525
+"Taco Bell","Tropicana® Pink Lemonade (30 fl oz)",390,NA,NA,NA,NA,100,NA,0.25
 "Pizza Hut","Detroit Double Cheesy Pizza Slice",280,12,6,31,2,2,13,1.4
 "Pizza Hut","Detroit Double Pepperoni Pizza Slice",330,17,7,30,2,2,14,1.8
 "Pizza Hut","Detroit Meaty Pizza Slice",320,16,6,31,2,2,14,1.6
@@ -1118,31 +1118,31 @@ Calorie Sweetener",0,0,0,1,0,1,0,0
 "Pizza Hut","Hand Tossed Slices Backyard BBQ Chicken Large",300,10,4.5,40,2,7,14,1.325
 "Pizza Hut","Hand Tossed Slices Beyond Meat® Pepperoni Medium",200,7,3.5,26,2,1,9,1.025
 "Pizza Hut","Hand Tossed Slices Beyond Meat® Pepperoni Large",280,10,5,35,3,2,12,1.4
-"Pizza Hut","Hand Tossed Slices  Buffalo Chicken Small",130,3.5,1.5,19,0,0,6,0.95
+"Pizza Hut","Hand Tossed Slices  Buffalo Chicken Small",130,3.5,1.5,19,NA,NA,6,0.95
 "Pizza Hut","Hand Tossed Slices  Buffalo Chicken Medium",200,5,2.5,28,2,1,9,1.4
 "Pizza Hut","Hand Tossed Slices  Buffalo Chicken Large",270,8,4,37,2,2,13,1.85
-"Pizza Hut","Hand Tossed Slices Cheese Small",130,4.5,2,17,1,0,6,0.625
+"Pizza Hut","Hand Tossed Slices Cheese Small",130,4.5,2,17,1,NA,6,0.625
 "Pizza Hut","Hand Tossed Slices Cheese Medium",210,8,3.5,26,2,1,10,0.975
 "Pizza Hut","Hand Tossed Slices Cheese Large",290,10,5,34,3,2,13,1.35
-"Pizza Hut","Hand Tossed Slices Chicken Bacon Parmesan Small",150,6,2.5,16,1,0,7,0.675
+"Pizza Hut","Hand Tossed Slices Chicken Bacon Parmesan Small",150,6,2.5,16,1,NA,7,0.675
 "Pizza Hut","Hand Tossed Slices Chicken Bacon Parmesan Medium",230,9,4,25,2,1,11,1.025
 "Pizza Hut","Hand Tossed Slices Chicken Bacon Parmesan Large",310,13,5,33,2,1,16,1.4
 "Pizza Hut","Hand Tossed Slices Hawaiian Chicken Small",130,4,1.5,17,1,1,7,0.675
 "Pizza Hut","Hand Tossed Slices Hawaiian Chicken Medium",210,6,3,27,2,2,10,1.05
 "Pizza Hut","Hand Tossed Slices Hawaiian Chicken Large",280,9,4,36,3,3,15,1.45
-"Pizza Hut","Hand Tossed Slices Meat Lover’s® Small",180,9,3.5,17,1,0,7,0.925
+"Pizza Hut","Hand Tossed Slices Meat Lover’s® Small",180,9,3.5,17,1,NA,7,0.925
 "Pizza Hut","Hand Tossed Slices Meat Lover’s® Medium",290,15,6,26,2,1,12,1.475
 "Pizza Hut","Hand Tossed Slices Meat Lover’s® Large",390,21,8,34,3,2,17,2.075
-"Pizza Hut","Hand Tossed Slices Pepperoni Small",130,5,2,16,1,0,6,0.65
+"Pizza Hut","Hand Tossed Slices Pepperoni Small",130,5,2,16,1,NA,6,0.65
 "Pizza Hut","Hand Tossed Slices Pepperoni Medium",220,9,4,25,2,1,9,1.05
 "Pizza Hut","Hand Tossed Slices Pepperoni Large",300,13,6,34,3,2,13,1.475
-"Pizza Hut","Hand Tossed Slices Pepperoni Lover’s® Small",160,7,3,17,1,0,7,0.775
+"Pizza Hut","Hand Tossed Slices Pepperoni Lover’s® Small",160,7,3,17,1,NA,7,0.775
 "Pizza Hut","Hand Tossed Slices Pepperoni Lover’s® Medium",270,13,6,26,2,1,12,1.325
 "Pizza Hut","Hand Tossed Slices Pepperoni Lover’s® Large",370,18,8,35,3,2,17,1.85
 "Pizza Hut","Hand Tossed Slices Supreme Small",150,6,2.5,17,1,1,6,0.7
 "Pizza Hut","Hand Tossed Slices Supreme Medium",240,10,4,26,2,2,10,1.125
 "Pizza Hut","Hand Tossed Slices Supreme Large",320,14,6,35,3,2,14,1.575
-"Pizza Hut","Hand Tossed Slices Ultimate Cheese Lover’s® Small",150,6,2.5,16,1,0,6,0.625
+"Pizza Hut","Hand Tossed Slices Ultimate Cheese Lover’s® Small",150,6,2.5,16,1,NA,6,0.625
 "Pizza Hut","Hand Tossed Slices Ultimate Cheese Lover’s® Medium",230,10,4.5,25,2,1,11,0.975
 "Pizza Hut","Hand Tossed Slices Ultimate Cheese Lover’s® Large",310,13,6,33,2,1,15,1.35
 "Pizza Hut","Hand Tossed Slices Veggie Lover’s® Small",120,4,1.5,17,1,1,5,0.575

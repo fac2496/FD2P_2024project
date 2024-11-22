@@ -82,6 +82,9 @@ View(other_items)
   ## Nachos" "nacho"
   ## Pizza: "Hand Tossed"
 
+
+
+# [TO ADD THIS TO THE CATEGORIES LIST AND RUN THIS LINE]
 # 5th attempt: 258 entries unclassified
 # To add: 
   ## Breakfast: "McMuffin", "biscuit"

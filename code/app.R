@@ -1,7 +1,10 @@
 library(shiny)
 
+# Set the working directory
+setwd("/Users/felixculas/shiny/fd2p2024/code/")
+
 # Load the data
-menu_data <- read.csv("/Users/felixculas/shiny/fd2p2024/processed_data/fastfood_categoryset.csv", header = TRUE)
+menu_data <- read.csv("../processed_data/fastfood_categoryset.csv", header = TRUE)
 
 # Define UI
 ui <- fluidPage(
@@ -13,7 +16,8 @@ ui <- fluidPage(
       selectInput("age", "How old are you?", choices = c("1", "2-3", "4-6", "7-10", "11-14", "15-18", "19 - 64", "65 - 74", "75+")),
       selectInput("gender", "What is your gender?", choices = c("Male", "Female")),
       uiOutput("category_ui"),  # Placeholder for the category dropdown
-      uiOutput("item_ui")  # Placeholder for the item dropdown
+      uiOutput("item_ui"),  # Placeholder for the item dropdown
+      uiOutput("category_image")  # Placeholder for the category image
     ),
     mainPanel(
       uiOutput("font_color")
@@ -46,7 +50,7 @@ server <- function(input, output, session) {
     selected_restaurant <- input$restaurant
     categories <- unique(menu_data$Category[menu_data$Company == selected_restaurant])
     output$category_ui <- renderUI({
-      selectInput("category", "What do you want to have today?:", choices = categories)
+      selectInput("category", "Select a category:", choices = categories)
     })
   })
   
@@ -56,7 +60,17 @@ server <- function(input, output, session) {
     
     # Update the item dropdown
     output$item_ui <- renderUI({
-      selectInput("item", "Browse and select an item:", choices = selected_items)
+      selectInput("item", "Select an item:", choices = selected_items)
+    })
+    
+    # Display the corresponding category image
+    output$category_image <- renderUI({
+      img_src <- paste0("food_images/", input$category, ".jpg")
+      if (file.exists(img_src)) {
+        tags$img(src = img_src, alt = input$category, height = "200px")
+      } else {
+        tags$p("Image not found")
+      }
     })
   })
 }

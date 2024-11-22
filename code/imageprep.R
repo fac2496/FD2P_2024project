@@ -6,24 +6,32 @@ test_menu_data <- original_menu_data
 
 # Step 3: Define keywords for each category
 categories <- list(
-  Burgers = c("burger", "hamburger", "cheeseburger", "McDouble", "Quarter Pounder", "Big Mac", "Big N' Tasty ", "McChicken", "McRib", "Stacker King", "Chicken Jr."),
-  Sandwiches = c("sandwich", "sub"),
-  Salads = c("salad"),
-  Sides = c("fries", "onion rings", "nuggets", "Hash Brown", "potatoes"),
-  Desserts = c("ice cream", "cake", "pie", "Sundae", "McFlurry", "Cookie", "frosty", "cinnamon twist", "Cinnamon", "soft serve"),
-  Sweet_Drinks = c("Coca-cola", "coke", "sprite", "mountain", "Fanta", "Dr Pepper", "Lemonade", "7UP", "Mist Twst", "Pepsi", "Miranda", "Root Beer", "Tropicana", "Coca cola", "Dr. Pepper", "limeade", "berry freeze", "mtn dew", "smoothie", "7-UP"),
-  Condiments = c("Dressing", "Ketchup", "salt packets", "barbecue sauce", "dipping sauce", "honey", "sauce", "jam", "preserves", "sugar packet"),
-  Wraps = c("wrap"),
+  Breakfast = c("oatmeal", "breakfast", "McMuffin", "biscuit", "McGriddles", "bagel"),
+  Burgers = c("burger", "hamburger", "cheeseburger", "McDouble", "Quarter Pounder", "Big Mac", "Big N' Tasty ", "McChicken", "McRib", "Stacker King", "Chicken Jr.", "Baconator", "Dave's", "Double Stack", "BLT", "Tasty®", "Angus", "Dave’s Single", "Dave’s Double", "Dave’s Triple", "o-fish"),
+  Burrito = c("burrito"),
+  Chalupa = c("chalupa"),
+  Chicken = c("breast", "wings", "drumstick", "thigh", "wing", "tender"),
   Coffee_drinks = c("Cappuccino", "Latte", "Mocha", "Coffee", "frappe"),
+  Condiments = c("Dressing", "Ketchup", "salt packets", "barbecue sauce", "dipping sauce", "honey", "sauce", "jam", "preserves", "sugar packet", "jelly packet", "spread", "salt packet", "Mayonnaise", "Vinaigrette", "Margarine", "sweetener", "american cheese"),
+  Desserts = c("ice cream", "cake", "pie", "Sundae", "McFlurry", "Cookie", "frosty", "cinnamon twist", "Cinnamon", "soft serve", "Cinnabon", "Cornbread muffin", "muffin", "cone", "parfait", "caramel dip"),
+  Gordita = c("gordita"),
+  Juice = c("juice", "lavaburst", "fruit punch", "fruit cup", "yumberry"),
+  Milk = c("milk"),
+  Nachos = c("nacho"),
+  Pizza = c("pizza", "Hand Tossed"),
+  Quesadilla = c("quesadilla"),
+  Quesarito = ("quesarito"),
+  Salads = c("salad"),
+  Sandwiches = c("sandwich", "sub", "Club", "CROISSAN’WICH®", "chipotle melt"),
   Shakes = c("shake"),
+  Sides = c("fries", "onion rings", "nuggets", "Hash Brown", "potatoes", "corn", "Potato", "Apple Bites", "crouton", "chilli", "gravy and sausage", "macaroni &", "littles", "turnover", "BBQ baked", "famous bowl", "crispy twister", "gizzards", "livers", "roll up", "power menu", "chili", "black beans"),
+  Steak = c("steak"),
+  Sweet_Drinks = c("Coca-cola", "coke", "sprite", "mountain", "Fanta", "Dr Pepper", "Lemonade", "7UP", "Mist Twst", "Pepsi", "Miranda", "Root Beer", "Tropicana", "Coca cola", "Dr. Pepper", "limeade", "berry freeze", "mtn dew", "smoothie", "7-UP", "hot chocolate", "manzanita", "mnt dew", "sierra", "fruit freeze"),
+  Taco = c ("taco"),
   Tea = c("tea"),
   Veggie_sides = c("coleslaw", "corn on the cob", "green beans"),
-  Pizza = c("pizza", "Hand Tossed"),
-  Steak = c("steak"),
-  Chicken = c("breast", "wings", "drumstick", "thigh"),
-  Breakfast = c("oatmeal", "breakfast", "McMuffin"),
-  Nachos = c("nacho"),
-  Taco = c ("taco")
+  Water = c("water"),
+  Wraps = c("wrap")
 )
 
 # Step 4: Function to categorize items based on keywords (case insensitive)
@@ -83,8 +91,6 @@ View(other_items)
   ## Pizza: "Hand Tossed"
 
 
-
-# [TO ADD THIS TO THE CATEGORIES LIST AND RUN THIS LINE]
 # 5th attempt: 258 entries unclassified
 # To add: 
   ## Breakfast: "McMuffin", "biscuit"
@@ -96,3 +102,43 @@ View(other_items)
   ## Burger: "Baconator", "Dave's", "Double Stack", "BLT"
   ## Sides: "Potato", "Apple Bites", "chilli" 
   ## Milk: "milk"
+
+# 6th attempt: 178 entries unclassified
+# To add: 
+  ## Breakfast: "McGriddles", "bagel"
+  ## Burgers: "Tasty®", "Angus", "Dave's Single", "Dave's Double", "Dave's Triple"
+  ## Condiments: "Vinaigrette", "Margarine"
+  ## Burritos: "burrito" 
+  ## Dessert: "parfait", "caramel dip"
+  ## Juice: "lavaburst", "fruit punch", "fruit cup"
+  ## Sides: "crouton", "chilli", "gravy and sausage", "macaroni &", "littles", "turnover"
+  ## Sandwich: "Club", "CROISSAN’WICH®"
+
+
+#7th attempt: 112 entries unclassified
+# To add:
+  ## Burger: "o-fish"
+  ## condiments: "sweetener", "american cheese"
+  ## sweet_drink: "hot chocolate", "manzanita", "mnt dew", "sierra", "fruit freeze"
+  ## sides: "BBQ baked", "famous bowl", "crispy twister", "gizzards", "livers", "roll up", "power menu", "black beans"
+  ## juice: "yumberry"
+  ## Chalupa: "chalupa"
+  ## gordita: "gordita"
+  ## quesarito: "quesarito"
+  ## quesadilla: "quesadilla
+  ## Water: "water"
+  ## Sandwich: "chipotle melt"
+
+# After 8 attempts, 44 items entries left unclassified
+
+getwd()
+
+
+setwd("processed_data")
+getwd()
+write.csv(test_menu_data, "fastfood_categoryset.csv", row.names = FALSE)
+
+
+updated_menu_data <- read.csv("fastfood_categoryset.csv")
+
+View(updated_menu_data[updated_menu_data$Category == "Other", ])

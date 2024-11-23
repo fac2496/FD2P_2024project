@@ -65,8 +65,8 @@ server <- function(input, output, session) {
     
     # Display the corresponding category image
     output$category_image <- renderUI({
-      img_src <- paste0("food_images/", input$category, ".jpg")
-      if (file.exists(img_src)) {
+      img_src <- paste0(input$category, ".jpg")
+      if (file.exists(file.path("www", img_src))) {
         tags$img(src = img_src, alt = input$category, height = "200px")
       } else {
         tags$p("Image not found")
@@ -77,7 +77,3 @@ server <- function(input, output, session) {
 
 # Run the application 
 shinyApp(ui = ui, server = server)
-
-
-getwd()
-list.files(recursive = TRUE)

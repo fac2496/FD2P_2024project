@@ -1,14 +1,17 @@
 library(shiny)
 library(ggplot2)
+library(jsonlite)
+library(htmltools)
+library(scales)
+
 
 # Load datasets
-setwd("/Users/felixculas/shiny/fd2p2024/code/")
 menu_data <- read.csv("../processed_data/fastfood_categoryset.csv", header = TRUE) 
 rdi_data <- read.csv("../processed_data/guidelines_workingset.csv", header = TRUE)
 
 # Define UI
 ui <- fluidPage(
-  titlePanel("Fast Food Nutrition Visualizer"),
+  titlePanel("Better Bites: Know Your Food"),
   
   tabsetPanel(
     # Tab 1: Main App Functionality
@@ -17,15 +20,20 @@ ui <- fluidPage(
                sidebarPanel(
                  selectInput("restaurant", "Select a restaurant to start:", 
                              choices = unique(menu_data$Company)),
-                 selectInput("age", "How old are you?", choices = unique(rdi_data$Age.Range)),
+                 selectInput("age", "How old are you?", choices = unique(rdi_data$Age.Range), selected = "19 - 64"),
                  selectInput("gender", "What is your gender?", choices = unique(rdi_data$Gender)),
                  uiOutput("category_ui"),  # Dynamically updated category dropdown
                  uiOutput("item_ui"),      # Dynamically updated item dropdown
-                 uiOutput("category_image")  # Image of selected category
+                 uiOutput("category_image"),  # Image of selected category
+                 actionButton("add_item", "Add item to basket"),
+                 uiOutput("remove_item_ui"), # UI for remove item button
+                 actionButton("remove_item", "Remove item from basket")  # Remove item button
                ),
                mainPanel(
-                 h3("Nutritional Information"),
-                 plotOutput("nutrition_plot")  # Nutritional visualization
+                 h3("Nutritional Breakdown of Your Menu Choice!"),
+                 plotOutput("nutrition_plot"),  # Nutritional visualization
+                 h3("Basket Summary"),
+                 tableOutput("basket_summary")  # Summary of items in basket
                )
              )
     ),
@@ -98,16 +106,176 @@ server <- function(input, output, session) {
                Percent = percent_of_rdi)
   })
   
+  # Initialize basket
+  basket <- reactiveVal(data.frame(Item = character(), Calories = numeric(), Total.Fat = numeric(), Sugars = numeric(), Salt = numeric(), stringsAsFactors = FALSE))
+  
+  # Add item to basket
+  observeEvent(input$add_item, {
+    req(input$item, input$age, input$gender)
+    
+    item_selected <- input$item
+    restaurant_selected <- input$restaurant
+    
+    item_selected <- trimws(item_selected)
+    restaurant_selected <- trimws(restaurant_selected)
+    
+    selected_item_data <- menu_data[menu_data$Item == item_selected & 
+                                      menu_data$Company == restaurant_selected, ]
+    
+    # Check if item data is valid
+    if (nrow(selected_item_data) == 1) {
+      # Fetch RDI values for the selected age and gender
+      rdi_row <- rdi_data[rdi_data$Age.Range == input$age & rdi_data$Gender == input$gender, ]
+      rdi <- as.numeric(rdi_row[1, c("Calories", "Total.Fat..g.", "Sugars..g.", "Salt.g")])
+      
+      # Extract nutrient values for the selected item
+      nutrient_values <- as.numeric(selected_item_data[1, c("Calories", "Total.Fat..g.", "Sugars..g.", "Salt.g")])
+      nutrients_exceeding <- which(nutrient_values > rdi)
+      
+      # Display warning if any nutrient exceeds RDI
+      # Display warning and suggest alternatives if any nutrient exceeds RDI
+      if (length(nutrients_exceeding) > 0) {
+        nutrient_names <- c("Calories", "Total Fat", "Sugars", "Salt")
+        exceeded <- nutrient_names[nutrients_exceeding]
+        warning_message <- paste("Notice: This item exceeds your recommended daily intake for", 
+                                 paste(exceeded, collapse = ", "), ". Please enjoy in moderation!")
+        
+        # Find alternatives in the same category
+        alternatives <- menu_data[menu_data$Company == input$restaurant & 
+                                    menu_data$Category == input$category, ]
+        valid_alternatives <- alternatives[apply(alternatives[, c("Calories", "Total.Fat..g.", "Sugars..g.", "Salt.g")], 1, function(x) all(x <= rdi)), ]
+        
+        # Prepare suggestion message
+        if (nrow(valid_alternatives) > 0) {
+          alternative_items <- paste(valid_alternatives$Item[1:min(5, nrow(valid_alternatives))], collapse = ", ")
+          suggestion_message <- paste("Consider these alternatives instead: ", alternative_items)
+        } else {
+          suggestion_message <- "Unfortunately, no suitable alternatives are available in this category."
+        }
+        
+        # Show warning with suggestions
+        # Show warning with actionable suggestions
+        showModal(modalDialog(
+          title = "Warning: Nutritional Intake Exceeded",
+          tagList(
+            tags$p(warning_message),
+            if (nrow(valid_alternatives) > 0) {
+              tagList(
+                tags$p("Consider these alternatives instead:"),
+                selectInput("alternative_select", "Choose an alternative item:", 
+                            choices = valid_alternatives$Item),
+                actionButton("add_alternative", "Add Selected Alternative")
+              )
+            } else {
+              tags$p("Unfortunately, no suitable alternatives are available in this category.")
+            },
+            tags$hr(),
+            actionButton("remove_offending", "Remove This Item"),
+            tags$hr(),
+            actionButton("dismiss_modal", "Close", class = "btn-primary")
+          ),
+          easyClose = FALSE,
+          footer = NULL
+        ))
+      }
+      
+      # Add the item to the basket
+      new_item <- data.frame(
+        Item = item_selected, 
+        Calories = selected_item_data$Calories, 
+        Total.Fat = selected_item_data$Total.Fat..g., 
+        Sugars = selected_item_data$Sugars..g., 
+        Salt = selected_item_data$Salt.g
+      )
+      basket(rbind(basket(), new_item))
+    } else {
+      print("Error: Multiple items or no matching items found. Check your filtering logic.")
+    }
+  }, ignoreInit = TRUE)
+  
+  # Logic for 'Remove Offending' button
+  observeEvent(input$remove_offending, {
+    # Remove the offending item from the basket
+    offending_item <- input$item
+    current_basket <- basket()
+    updated_basket <- current_basket[current_basket$Item != offending_item, ]
+    basket(updated_basket)
+    
+    # Provide feedback in the console (optional debugging)
+    print(paste("Removed offending item:", offending_item))
+  })
+  
+  # Logic for 'Add Alternative' button
+  observeEvent(input$add_alternative, {
+    # Get selected alternative item
+    selected_alternative <- input$alternative_select
+    restaurant <- input$restaurant
+    
+    # Find the corresponding item in the menu data
+    alternative_data <- menu_data[menu_data$Item == selected_alternative & 
+                                    menu_data$Company == restaurant, ]
+    if (nrow(alternative_data) == 1) {
+      # Prepare new item for the basket
+      new_item <- data.frame(
+        Item = selected_alternative,
+        Calories = alternative_data$Calories,
+        Total.Fat = alternative_data$Total.Fat..g.,
+        Sugars = alternative_data$Sugars..g.,
+        Salt = alternative_data$Salt.g
+      )
+      # Add the new item to the basket
+      basket(rbind(basket(), new_item))
+      
+      # Provide feedback in the console (optional debugging)
+      print(paste("Added alternative item:", selected_alternative))
+    }
+  })
+  
+  # Render dropdown for item removal when button is clicked
+  observeEvent(input$remove_item, {
+    current_basket <- basket()
+    
+    # Only show dropdown if basket is not empty
+    if (nrow(current_basket) > 0) {
+      output$remove_item_ui <- renderUI({
+        selectInput("remove_item_select", "Select an item to remove", choices = current_basket$Item)
+      })
+    } else {
+      output$remove_item_ui <- renderUI({
+        tags$p("Basket is empty.", style = "color: gray;")
+      })
+    }
+  })
+  
+  # Remove item from basket after selection
+  observeEvent(input$remove_item_select, {
+    selected_item_to_remove <- input$remove_item_select
+    
+    if (!is.null(selected_item_to_remove)) {
+      current_basket <- basket()
+      updated_basket <- current_basket[current_basket$Item != selected_item_to_remove, ]
+      basket(updated_basket)
+      
+      # Debugging print statements
+      print(paste("Removed item:", selected_item_to_remove))
+      print("Updated basket:")
+      print(updated_basket)
+    }
+  })
+  # Enable manual dismissal of pop up button
+  observeEvent(input$dismiss_modal, {
+    removeModal()
+  })
+  
   # Render nutrition plot
   output$nutrition_plot <- renderPlot({
     nutrient_df <- nutrient_data()
     
-    # Define custom colors for each nutrient
     nutrient_colors <- c("Calories" = "steelblue", 
                          "Total Fat" = "darkorange", 
                          "Sugars" = "forestgreen", 
                          "Salt" = "purple")
-    
+    nutrient_df$Nutrient <- factor(nutrient_df$Nutrient, levels = c("Salt", "Sugars", "Total Fat", "Calories"))
     ggplot(nutrient_df, aes(x = Percent, y = Nutrient, fill = Nutrient)) +
       geom_bar(stat = "identity") +
       geom_text(aes(label = paste0(round(Percent, 1), "%")), hjust = -0.2, color = "black") +
@@ -118,14 +286,61 @@ server <- function(input, output, session) {
         title = paste("What's in a", input$item, "?"),
         x = "% of Daily Nutritional Requirements",
         y = "Nutritional Components",
-        fill = "Nutrient",
+        fill = "Components",
         color = ""  # Blank title for the line legend
       ) +
       theme_minimal() +
       theme(
-        legend.position = "right",  # Show legend
-        panel.grid.major.y = element_blank()  # Remove horizontal gridlines
+        legend.position = "right", 
+        panel.grid.major.y = element_blank()
       )
+  })
+  
+  # Render basket summary with conditional formatting
+  output$basket_summary <- renderUI({
+    basket_data <- basket()
+    if (nrow(basket_data) == 0) return(tags$p("Basket is empty.", style = "color: gray;"))
+    
+    # Calculate totals for the basket
+    total_calories <- sum(basket_data$Calories)
+    total_fat <- sum(basket_data$Total.Fat)
+    total_sugars <- sum(basket_data$Sugars)
+    total_salt <- sum(basket_data$Salt)
+    
+    # Fetch RDI values based on user input
+    rdi_row <- rdi_data[rdi_data$Age.Range == input$age & rdi_data$Gender == input$gender, ]
+    rdi <- as.numeric(rdi_row[1, c("Calories", "Total.Fat..g.", "Sugars..g.", "Salt.g")])
+    
+    # Prepare table rows with conditional formatting
+    summary_table <- tags$table(
+      style = "width: 100%; border-collapse: collapse;",
+      tags$thead(
+        tags$tr(
+          tags$th("Nutrient"), tags$th("Total"), tags$th("RDI"), tags$th("% of RDI")
+        )
+      ),
+      tags$tbody(
+        tags$tr(
+          style = ifelse(total_calories > rdi[1], "color: red;", ""),
+          tags$td("Calories"), tags$td(total_calories), tags$td(rdi[1]), tags$td(sprintf("%.1f%%", total_calories / rdi[1] * 100))
+        ),
+        tags$tr(
+          style = ifelse(total_fat > rdi[2], "color: red;", ""),
+          tags$td("Total Fat"), tags$td(total_fat), tags$td(rdi[2]), tags$td(sprintf("%.1f%%", total_fat / rdi[2] * 100))
+        ),
+        tags$tr(
+          style = ifelse(total_sugars > rdi[3], "color: red;", ""),
+          tags$td("Sugars"), tags$td(total_sugars), tags$td(rdi[3]), tags$td(sprintf("%.1f%%", total_sugars / rdi[3] * 100))
+        ),
+        tags$tr(
+          style = ifelse(total_salt > rdi[4], "color: red;", ""),
+          tags$td("Salt"), tags$td(total_salt), tags$td(rdi[4]), tags$td(sprintf("%.1f%%", total_salt / rdi[4] * 100))
+        )
+      )
+    )
+    
+    # Return the styled table
+    summary_table
   })
 }
 

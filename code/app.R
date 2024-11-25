@@ -113,48 +113,44 @@ server <- function(input, output, session) {
   observeEvent(input$add_item, {
     req(input$item, input$age, input$gender)
     
+    # Add selected item to the basket
     item_selected <- input$item
     restaurant_selected <- input$restaurant
-    
-    item_selected <- trimws(item_selected)
-    restaurant_selected <- trimws(restaurant_selected)
-    
     selected_item_data <- menu_data[menu_data$Item == item_selected & 
                                       menu_data$Company == restaurant_selected, ]
     
-    # Check if item data is valid
     if (nrow(selected_item_data) == 1) {
-      # Fetch RDI values for the selected age and gender
+      # Prepare new item
+      new_item <- data.frame(
+        Item = item_selected,
+        Calories = selected_item_data$Calories,
+        Total.Fat = selected_item_data$Total.Fat..g.,
+        Sugars = selected_item_data$Sugars..g.,
+        Salt = selected_item_data$Salt.g
+      )
+      updated_basket <- rbind(basket(), new_item)
+      basket(updated_basket)
+      
+      # Check if total basket nutrients exceed RDI
+      total_nutrients <- colSums(updated_basket[, c("Calories", "Total.Fat", "Sugars", "Salt")])
       rdi_row <- rdi_data[rdi_data$Age.Range == input$age & rdi_data$Gender == input$gender, ]
       rdi <- as.numeric(rdi_row[1, c("Calories", "Total.Fat..g.", "Sugars..g.", "Salt.g")])
       
-      # Extract nutrient values for the selected item
-      nutrient_values <- as.numeric(selected_item_data[1, c("Calories", "Total.Fat..g.", "Sugars..g.", "Salt.g")])
-      nutrients_exceeding <- which(nutrient_values > rdi)
-      
-      # Display warning if any nutrient exceeds RDI
-      # Display warning and suggest alternatives if any nutrient exceeds RDI
+      # Identify nutrients exceeding RDI
+      nutrients_exceeding <- which(total_nutrients > rdi)
       if (length(nutrients_exceeding) > 0) {
         nutrient_names <- c("Calories", "Total Fat", "Sugars", "Salt")
         exceeded <- nutrient_names[nutrients_exceeding]
-        warning_message <- paste("Notice: This item exceeds your recommended daily intake for", 
+        warning_message <- paste("Notice: Your basket exceeds the recommended daily intake for", 
                                  paste(exceeded, collapse = ", "), ". Please enjoy in moderation!")
         
-        # Find alternatives in the same category
+        # Suggest alternatives for the most recent item
         alternatives <- menu_data[menu_data$Company == input$restaurant & 
                                     menu_data$Category == input$category, ]
-        valid_alternatives <- alternatives[apply(alternatives[, c("Calories", "Total.Fat..g.", "Sugars..g.", "Salt.g")], 1, function(x) all(x <= rdi)), ]
+        valid_alternatives <- alternatives[apply(alternatives[, c("Calories", "Total.Fat..g.", "Sugars..g.", "Salt.g")], 1, 
+                                                 function(x) all(x <= rdi)), ]
         
-        # Prepare suggestion message
-        if (nrow(valid_alternatives) > 0) {
-          alternative_items <- paste(valid_alternatives$Item[1:min(5, nrow(valid_alternatives))], collapse = ", ")
-          suggestion_message <- paste("Consider these alternatives instead: ", alternative_items)
-        } else {
-          suggestion_message <- "Unfortunately, no suitable alternatives are available in this category."
-        }
-        
-        # Show warning with suggestions
-        # Show warning with actionable suggestions
+        # Show modal with actionable options
         showModal(modalDialog(
           title = "Warning: Nutritional Intake Exceeded",
           tagList(
@@ -170,7 +166,7 @@ server <- function(input, output, session) {
               tags$p("Unfortunately, no suitable alternatives are available in this category.")
             },
             tags$hr(),
-            actionButton("remove_offending", "Remove This Item"),
+            actionButton("remove_offending", "Remove Last Added Item"),
             tags$hr(),
             actionButton("dismiss_modal", "Close", class = "btn-primary")
           ),
@@ -178,31 +174,23 @@ server <- function(input, output, session) {
           footer = NULL
         ))
       }
-      
-      # Add the item to the basket
-      new_item <- data.frame(
-        Item = item_selected, 
-        Calories = selected_item_data$Calories, 
-        Total.Fat = selected_item_data$Total.Fat..g., 
-        Sugars = selected_item_data$Sugars..g., 
-        Salt = selected_item_data$Salt.g
-      )
-      basket(rbind(basket(), new_item))
     } else {
       print("Error: Multiple items or no matching items found. Check your filtering logic.")
     }
-  }, ignoreInit = TRUE)
+  })
   
   # Logic for 'Remove Offending' button
   observeEvent(input$remove_offending, {
-    # Remove the offending item from the basket
-    offending_item <- input$item
     current_basket <- basket()
-    updated_basket <- current_basket[current_basket$Item != offending_item, ]
-    basket(updated_basket)
     
-    # Provide feedback in the console (optional debugging)
-    print(paste("Removed offending item:", offending_item))
+    # Remove the last added item
+    if (nrow(current_basket) > 0) {
+      updated_basket <- current_basket[-nrow(current_basket), ]
+      basket(updated_basket)
+      print("Removed the last added item.")
+    } else {
+      print("Basket is empty; nothing to remove.")
+    }
   })
   
   # Logic for 'Add Alternative' button

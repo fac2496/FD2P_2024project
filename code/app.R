@@ -56,6 +56,8 @@ ui <- fluidPage(
 # Define server logic
 server <- function(input, output, session) {
   
+  basket_added <- reactiveVal(FALSE)  # Tracks if an item has been added
+  
   # Update categories based on selected restaurant
   observeEvent(input$restaurant, {
     categories <- unique(menu_data$Category[menu_data$Company == input$restaurant])
@@ -133,6 +135,9 @@ server <- function(input, output, session) {
       )
       updated_basket <- rbind(basket(), new_item)
       basket(updated_basket)
+      
+      # Set basket_added flag to TRUE
+      basket_added(TRUE)
       
       # Check if total basket nutrients exceed RDI
       total_nutrients <- colSums(updated_basket[, c("Calories", "Total.Fat", "Sugars", "Salt")])
@@ -257,6 +262,7 @@ server <- function(input, output, session) {
         tags$p("Basket is empty.", style = "color: gray;")
       })
     }
+    basket_added(FALSE)
   })
   
   # Remove the selected item when "Confirm Removal" is clicked
@@ -319,6 +325,17 @@ server <- function(input, output, session) {
   # Enable manual dismissal of pop up button
   observeEvent(input$dismiss_modal, {
     removeModal()
+  })
+  
+  # Conditionally update the restaurant dropdown
+  observeEvent(basket(), {
+    if (nrow(basket()) == 0) {
+      # Unlock all restaurants when the basket is empty
+      updateSelectInput(session, "restaurant", choices = unique(menu_data$Company))
+    } else {
+      # Keep restaurant restriction when basket is not empty
+      updateSelectInput(session, "restaurant", selected = input$restaurant, choices = input$restaurant)
+    }
   })
   
   # Render nutrition plot

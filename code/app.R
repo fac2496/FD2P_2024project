@@ -3,7 +3,8 @@ library(ggplot2)
 library(jsonlite)
 library(htmltools)
 library(scales)
-
+library(bslib)
+library(shinyWidgets)
 
 # Load datasets
 menu_data <- read.csv("../processed_data/fastfood_categoryset.csv", header = TRUE) 
@@ -11,29 +12,70 @@ rdi_data <- read.csv("../processed_data/guidelines_workingset.csv", header = TRU
 
 # Define UI
 ui <- fluidPage(
-  titlePanel("Better Bites: Know Your Food"),
+  # Apply theme
+  theme = bs_theme(
+    version = 4,
+    bootswatch = "minty",
+    base_font = font_google("Roboto"),
+    heading_font = font_google("Roboto Slab")
+  ),
+  
+  # Dynamic Title Panel with Logo
+  titlePanel(
+    div(style = "text-align: center;",
+        uiOutput("dynamic_logo"),  # Placeholder for dynamic logo
+        h1("Better Bites: Know Your Food")
+    )
+  ),
   
   tabsetPanel(
     # Tab 1: Main App Functionality
     tabPanel("Visualizer",
-             sidebarLayout(
-               sidebarPanel(
-                 selectInput("restaurant", "Select a restaurant to start:", 
-                             choices = unique(menu_data$Company)),
-                 selectInput("age", "How old are you?", choices = unique(rdi_data$Age.Range), selected = "19 - 64"),
-                 selectInput("gender", "What is your gender?", choices = unique(rdi_data$Gender)),
-                 uiOutput("category_ui"),  # Dynamically updated category dropdown
-                 uiOutput("item_ui"),      # Dynamically updated item dropdown
-                 uiOutput("category_image"),  # Image of selected category
-                 actionButton("add_item", "Add item to basket"),
-                 uiOutput("remove_item_ui"), # UI for remove item button
-                 actionButton("remove_item", "Remove item from basket")  # Remove item button
+             fluidRow(
+               column(3, 
+                      div(
+                        class = "sidebar-container",
+                        h4("Customize Your Selection"),
+                        pickerInput("restaurant", "Select a restaurant:",
+                                    choices = unique(menu_data$Company),
+                                    options = pickerOptions(style = "btn-primary")),
+                        pickerInput("age", "Your age range:",
+                                    choices = unique(rdi_data$Age.Range),
+                                    selected = "19 - 64",
+                                    options = pickerOptions(style = "btn-info")),
+                        radioButtons("gender", "Your gender:",
+                                     choices = unique(rdi_data$Gender),
+                                     inline = TRUE),
+                        uiOutput("category_ui"),
+                        uiOutput("item_ui"),
+                        actionButton("add_item", "Add to Basket", class = "btn-success btn-block"),
+                        br(),
+                        uiOutput("remove_item_ui"),
+                        actionButton("remove_item", "Remove from Basket", class = "btn-danger btn-block")
+                      )
                ),
-               mainPanel(
-                 h3("Nutritional Breakdown of Your Menu Choice!"),
-                 plotOutput("nutrition_plot"),  # Nutritional visualization
-                 h3("Basket Summary"),
-                 tableOutput("basket_summary")  # Summary of items in basket
+               
+               column(6, 
+                      div(
+                        class = "main-panel-container",
+                        h3("Nutritional Breakdown"),
+                        plotOutput("nutrition_plot", height = "400px"),  # Interactive plot placeholder
+                        br(),
+                        uiOutput("progress_feedback")  # Dynamically display user progress
+                      )
+               ),
+               
+               column(3, 
+                      div(
+                        class = "basket-container",
+                        h4("Your Basket"),
+                        div(
+                          style = "background: #f9f9f9; padding: 15px; border-radius: 5px;",
+                          tableOutput("basket_summary"),
+                          br(),
+                          p("Total nutritional impact dynamically updated here.")
+                        )
+                      )
                )
              )
     ),
@@ -43,18 +85,42 @@ ui <- fluidPage(
              fluidRow(
                column(12,
                       h3("About This App"),
-                      p("This app helps users explore the nutritional content of fast food items."),
-                      p("Using the dropdowns, you can filter by restaurant, category, and food item."),
-                      p("The main panel visualizes how the selected item compares to your recommended daily intake (RDI) based on your age and gender."),
-                      p("Built with R and Shiny.")
+                      p("Explore fast food nutritional content and track your daily intake."),
+                      p("Select your age, gender, and favorite items to see personalized insights."),
+                      p("Built with R, Shiny, and a focus on intuitive user experiences.")
                )
              )
     )
   )
 )
-
 # Define server logic
 server <- function(input, output, session) {
+  
+  observe({
+    print(input$restaurant)
+  })
+  
+  # Dynamic logo rendering
+  output$dynamic_logo <- renderUI({
+    req(input$restaurant)  # Ensure a restaurant is selected
+    
+    # Map restaurant to logo file
+    logo_file <- switch(input$restaurant,
+                        "McDonald’s" = "mcdonalds_logo.jpg",
+                        "Burger King" = "burgerking_logo.jpg",
+                        "KFC" = "kfc_logo.jpg",
+                        "Pizza Hut" = "pizzahut_logo.jpg",
+                        "Taco Bell" = "tacobell_logo.jpg",
+                        "Wendy’s" = "wendys_logo.jpg",
+                        NULL)  # Default if no match
+    
+    # Render the logo dynamically
+    if (!is.null(logo_file)) {
+      img(src = logo_file, height = "75px", style = "margin-bottom: 10px;")
+    }
+  })
+  
+  
   
   basket_added <- reactiveVal(FALSE)  # Tracks if an item has been added
   
@@ -84,9 +150,7 @@ server <- function(input, output, session) {
       }
     })
   })
-  observeEvent(input$category, {
-    print(input$category)
-  })
+
   
   # Reactive block to calculate nutrient data
   nutrient_data <- reactive({
@@ -417,3 +481,4 @@ server <- function(input, output, session) {
 
 # Run the application 
 shinyApp(ui = ui, server = server)
+

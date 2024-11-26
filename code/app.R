@@ -82,6 +82,9 @@ server <- function(input, output, session) {
       }
     })
   })
+  observeEvent(input$category, {
+    print(input$category)
+  })
   
   # Reactive block to calculate nutrient data
   nutrient_data <- reactive({
@@ -107,7 +110,7 @@ server <- function(input, output, session) {
   })
   
   # Initialize basket
-  basket <- reactiveVal(data.frame(Item = character(), Calories = numeric(), Total.Fat = numeric(), Sugars = numeric(), Salt = numeric(), stringsAsFactors = FALSE))
+  basket <- reactiveVal(data.frame(Item = character(), Calories = numeric(), Total.Fat = numeric(), Sugars = numeric(), Salt = numeric(), Quantity = numeric(), stringsAsFactors = FALSE))
   
   # Add item to basket
   observeEvent(input$add_item, {
@@ -226,7 +229,10 @@ server <- function(input, output, session) {
     # Only show dropdown if basket is not empty
     if (nrow(current_basket) > 0) {
       output$remove_item_ui <- renderUI({
-        selectInput("remove_item_select", "Select an item to remove", choices = current_basket$Item)
+        tagList(
+          selectInput("remove_item_select", "Select an item to remove", choices = current_basket$Item),
+          actionButton("confirm_remove", "Confirm Removal")
+        )
       })
     } else {
       output$remove_item_ui <- renderUI({
@@ -235,21 +241,81 @@ server <- function(input, output, session) {
     }
   })
   
-  # Remove item from basket after selection
-  observeEvent(input$remove_item_select, {
-    selected_item_to_remove <- input$remove_item_select
+  # Render dropdown for item removal when button is clicked
+  observeEvent(input$remove_item, {
+    current_basket <- basket()
     
-    if (!is.null(selected_item_to_remove)) {
-      current_basket <- basket()
-      updated_basket <- current_basket[current_basket$Item != selected_item_to_remove, ]
-      basket(updated_basket)
-      
-      # Debugging print statements
-      print(paste("Removed item:", selected_item_to_remove))
-      print("Updated basket:")
-      print(updated_basket)
+    if (nrow(current_basket) > 0) {
+      output$remove_item_ui <- renderUI({
+        tagList(
+          selectInput("remove_item_select", "Select an item to remove", choices = unique(current_basket$Item)),
+          actionButton("confirm_remove", "Confirm Removal")
+        )
+      })
+    } else {
+      output$remove_item_ui <- renderUI({
+        tags$p("Basket is empty.", style = "color: gray;")
+      })
     }
   })
+  
+  # Remove the selected item when "Confirm Removal" is clicked
+  observeEvent(input$confirm_remove, {
+    req(input$remove_item_select) # Ensure an item is selected
+    current_basket <- basket()
+    item_to_remove <- input$remove_item_select
+    
+    # Find and remove the first instance of the selected item
+    remove_index <- which(current_basket$Item == item_to_remove)[1] # Remove only one occurrence
+    if (!is.na(remove_index)) {
+      updated_basket <- current_basket[-remove_index, ]
+      basket(updated_basket)
+      
+      # Update removal dropdown UI or show "empty" message
+      if (nrow(updated_basket) > 0) {
+        output$remove_item_ui <- renderUI({
+          tagList(
+            selectInput("remove_item_select", "Select an item to remove", choices = unique(updated_basket$Item)),
+            actionButton("confirm_remove", "Confirm Removal")
+          )
+        })
+      } else {
+        output$remove_item_ui <- renderUI({
+          tags$p("Basket is empty.", style = "color: gray;")
+        })
+      }
+    }
+  })
+  
+  # Remove the selected item when "Confirm Removal" is clicked
+  observeEvent(input$confirm_remove, {
+  req(input$remove_item_select) # Ensure an item is selected
+  current_basket <- basket()
+  item_to_remove <- input$remove_item_select
+  
+  # Find and remove the first instance of the selected item
+  remove_index <- which(current_basket$Item == item_to_remove)[1]
+  if (!is.na(remove_index)) {
+    updated_basket <- current_basket[-remove_index, ]
+    basket(updated_basket)
+    
+    # Update removal UI
+    if (nrow(updated_basket) > 0) {
+      output$remove_item_ui <- renderUI({
+        tagList(
+          selectInput("remove_item_select", "Select an item to remove", choices = unique(updated_basket$Item)),
+          actionButton("confirm_remove", "Confirm Removal")
+        )
+      })
+    } else {
+      output$remove_item_ui <- renderUI({
+        tags$p("Basket is empty.", style = "color: gray;")
+      })
+    }
+  }
+})
+  
+  
   # Enable manual dismissal of pop up button
   observeEvent(input$dismiss_modal, {
     removeModal()

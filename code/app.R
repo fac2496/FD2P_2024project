@@ -16,27 +16,28 @@ ui <- fluidPage(
   theme = bs_theme(
     version = 4,
     bootswatch = "minty",
-    base_font = font_google("Roboto"),
-    heading_font = font_google("Roboto Slab")
+    base_font = font_google("Inter"),
+    heading_font = font_google("Playfair Display"),
+    code_font = font_google("Inter")
   ),
   
   # Dynamic Title Panel with Logo
   titlePanel(
     div(style = "text-align: center;",
         uiOutput("dynamic_logo"),  # Placeholder for dynamic logo
-        h1("Better Bites: Know Your Food")
-    )
+        h1(style = "font-family: 'Playfair Display', serif;", "Better Bites: Know Your Food"))
   ),
   
+  # Main Content Area
   tabsetPanel(
     # Tab 1: Main App Functionality
-    tabPanel("Visualizer",
+    tabPanel("Menu",
              fluidRow(
-               column(3, 
+               column(3,
                       div(
                         class = "sidebar-container",
-                        h4("Customize Your Selection"),
-                        pickerInput("restaurant", "Select a restaurant:",
+                        #h4(style = "font-family: 'Playfair Display', serif;", "Customize Your Selection"),
+                        pickerInput("restaurant", "Pick a restaurant:",
                                     choices = unique(menu_data$Company),
                                     options = pickerOptions(style = "btn-primary")),
                         pickerInput("age", "Your age range:",
@@ -45,7 +46,8 @@ ui <- fluidPage(
                                     options = pickerOptions(style = "btn-info")),
                         radioButtons("gender", "Your gender:",
                                      choices = unique(rdi_data$Gender),
-                                     inline = TRUE),
+                                     inline = TRUE,
+                                     choiceNames = unique(rdi_data$Gender)),
                         uiOutput("category_ui"),
                         uiOutput("item_ui"),
                         actionButton("add_item", "Add to Basket", class = "btn-success btn-block"),
@@ -55,25 +57,26 @@ ui <- fluidPage(
                       )
                ),
                
-               column(6, 
+               column(6,
                       div(
                         class = "main-panel-container",
-                        h3("Nutritional Breakdown"),
-                        plotOutput("nutrition_plot", height = "400px"),  # Interactive plot placeholder
+                        h3(style = "font-family: 'Playfair Display', serif;"),
+                        plotOutput("nutrition_plot", height = "400px"),
                         br(),
-                        uiOutput("progress_feedback")  # Dynamically display user progress
+                        uiOutput("progress_feedback")
                       )
                ),
                
-               column(3, 
+               column(3,
                       div(
                         class = "basket-container",
-                        h4("Your Basket"),
+                        h4(style = "font-family: 'Playfair Display', serif;", "Your Basket"),
                         div(
                           style = "background: #f9f9f9; padding: 15px; border-radius: 5px;",
                           tableOutput("basket_summary"),
                           br(),
-                          p("Total nutritional impact dynamically updated here.")
+                          p(style = "font-style: italic;", "Your basket's total nutritional impact"),
+                          uiOutput("category_image")
                         )
                       )
                )
@@ -84,7 +87,7 @@ ui <- fluidPage(
     tabPanel("About",
              fluidRow(
                column(12,
-                      h3("About This App"),
+                      h3(style = "font-family: 'Playfair Display', serif;", "About This App"),
                       p("Explore fast food nutritional content and track your daily intake."),
                       p("Select your age, gender, and favorite items to see personalized insights."),
                       p("Built with R, Shiny, and a focus on intuitive user experiences.")
@@ -93,12 +96,10 @@ ui <- fluidPage(
     )
   )
 )
+
+
 # Define server logic
 server <- function(input, output, session) {
-  
-  observe({
-    print(input$restaurant)
-  })
   
   # Dynamic logo rendering
   output$dynamic_logo <- renderUI({
@@ -229,16 +230,16 @@ server <- function(input, output, session) {
             tags$p(warning_message),
             if (nrow(valid_alternatives) > 0) {
               tagList(
-                tags$p("Consider these alternatives instead:"),
-                selectInput("alternative_select", "Choose an alternative item:", 
+                tags$p("Consider these healthier alternatives:"),
+                selectInput("alternative_select", "Pick an alternative:", 
                             choices = valid_alternatives$Item),
-                actionButton("add_alternative", "Add Selected Alternative")
+                actionButton("add_alternative", "Add alternative to basket")
               )
             } else {
               tags$p("Unfortunately, no suitable alternatives are available in this category.")
             },
             tags$hr(),
-            actionButton("remove_offending", "Remove Last Added Item"),
+            actionButton("remove_offending", "Remove Current Item"),
             tags$hr(),
             actionButton("dismiss_modal", "Close", class = "btn-primary")
           ),
@@ -317,8 +318,8 @@ server <- function(input, output, session) {
     if (nrow(current_basket) > 0) {
       output$remove_item_ui <- renderUI({
         tagList(
-          selectInput("remove_item_select", "Select an item to remove", choices = unique(current_basket$Item)),
-          actionButton("confirm_remove", "Confirm Removal")
+          selectInput("remove_item_select", "Pick an item to remove", choices = unique(current_basket$Item)),
+          actionButton("confirm_remove", "Confirm & Remove")
         )
       })
     } else {

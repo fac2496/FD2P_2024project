@@ -1,226 +1,150 @@
 library(shiny)
 library(dplyr)
+library(shinyjs)
 
+# Read the data
+fastfood_data <- read.csv("/Users/felixculas/shiny/fd2p2024/processed_data/fastfood_categoryset.csv", header = TRUE)
+uk_guidelines <- read.csv("/Users/felixculas/shiny/fd2p2024/processed_data/guidelines_workingset.csv", header = TRUE)
+
+# Get unique company names
+unique_companies <- unique(fastfood_data$Company)
+
+# Get unique age ranges and genders
+unique_ages <- unique(uk_guidelines$Age.Range)
+unique_genders <- unique(uk_guidelines$Gender)
+
+# Define UI
 ui <- fluidPage(
-  titlePanel("FD2P Data Product"),
-  sidebarLayout(
-    sidebarPanel(
-      selectInput("age", "Choose your age:", choices = NULL, selected = NULL),
-      selectInput("gender", "Choose your gender:", choices = NULL, selected = NULL),
-      selectInput("restaurant", "Choose a restaurant:", choices = NULL, selected = NULL),
-      selectizeInput("item", "Choose an item:", choices = NULL, options = list(placeholder = 'Please scroll or type to select an item')),
-      actionButton("add_to_basket", "Add to Basket"),
-      h3("Basket"),
-      uiOutput("basket_ui")
-    ),
-    mainPanel(
-      actionButton("toggle_view", "Toggle View"),
-      conditionalPanel(
-        condition = "input.toggle_view % 2 == 0",
-        fluidRow(
-          column(3, plotOutput("caloriesPlot")),
-          column(3, plotOutput("fatPlot")),
-          column(3, plotOutput("saturatedFatPlot")),
-          column(3, plotOutput("saltPlot"))
-        ),
-        fluidRow(
-          column(3, plotOutput("carbsPlot")),
-          column(3, plotOutput("fiberPlot")),
-          column(3, plotOutput("sugarsPlot")),
-          column(3, plotOutput("proteinPlot"))
-        )
-      ),
-      conditionalPanel(
-        condition = "input.toggle_view % 2 == 1",
-        h3("Cumulative Nutritional Values"),
-        fluidRow(
-          column(3, plotOutput("cumulativeCaloriesPlot")),
-          column(3, plotOutput("cumulativeFatPlot")),
-          column(3, plotOutput("cumulativeSaturatedFatPlot")),
-          column(3, plotOutput("cumulativeSaltPlot"))
-        ),
-        fluidRow(
-          column(3, plotOutput("cumulativeCarbsPlot")),
-          column(3, plotOutput("cumulativeFiberPlot")),
-          column(3, plotOutput("cumulativeSugarsPlot")),
-          column(3, plotOutput("cumulativeProteinPlot"))
-        )
-      )
-    )
+  useShinyjs(),
+  tags$head(
+    tags$style(HTML("
+      .center-text {
+        text-align: center;
+      }
+      .center-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+      .center-radio {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+      .radio-label {
+        text-align: center;
+        width: 100%;
+      }
+      .center-button {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+      }
+      .action-button {
+        background-color: #28a745; /* Bright green */
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      .action-button:hover {
+        background-color: #218838; /* Darker green on hover */
+      }
+    "))
+  ),
+  div(style = "text-align: center;",
+      uiOutput("dynamic_logo"),  # Placeholder for dynamic logo
+      h1(class = "serif-font", "Better Bites: Know Your Food")
+  ),
+  navbarPage(id = "navbar", "",
+             tabPanel("Welcome Page", value = "welcome",
+                      fluidRow(
+                        column(12,
+                               div(class = "center-content",
+                                   h3("What are you craving today?", class = "center-text"),
+                                   selectInput("company", "Pick a restaurant to order from:", choices = unique_companies),
+                                   h3("How old are you?", class = "center-text"),
+                                   selectInput("age", "To understand your nutritional requirements", choices = unique_ages),
+                                   h3("What is your gender?", class = "center-text"),
+                                   div(class = "center-radio",
+                                       div(class = "radio-label", "To understand your nutritional requirements"),
+                                       radioButtons("gender", label = NULL, choices = unique_genders, inline = TRUE)
+                                   ),
+                                   div(class = "center-button",
+                                       actionButton("next_page", "Let's get started!", class = "action-button")
+                                   )
+                               )
+                        )
+                      )
+             ),
+             tabPanel("Page 2", value = "page2",
+                      fluidRow(
+                        column(12,
+                               uiOutput("page2_content")
+                        )
+                      )
+             )
   )
 )
 
 server <- function(input, output, session) {
-  menu_data <- read.csv("/Users/felixculas/shiny/fd2p2024/processed_data/fastfood_workingset.csv", header = TRUE)
-  guideline_data <- read.csv("/Users/felixculas/shiny/fd2p2024/processed_data/guidelines_workingset.csv", header = TRUE)
+  # Reactive value to store the selected restaurant
+  selected_restaurant <- reactiveVal()
   
-  unique_ages <- unique(guideline_data$Age.Range)
-  unique_genders <- unique(guideline_data$Gender)
+  # Reactive value to track if the button has been clicked
+  button_clicked <- reactiveVal(FALSE)
   
-  updateSelectInput(session, "age", choices = unique_ages, selected = "19-64")
-  updateSelectInput(session, "gender", choices = unique_genders, selected = NULL)
-  
-  unique_restaurants <- unique(menu_data$Company)
-  
-  updateSelectInput(session, "restaurant", choices = unique_restaurants, selected = NULL)
-  
-  observeEvent(input$restaurant, {
-    selected_restaurant <- input$restaurant
-    if (!is.null(selected_restaurant) && selected_restaurant != "") {
-      filtered_items <- menu_data$Item[menu_data$Company == selected_restaurant]
-      updateSelectizeInput(session, "item", choices = filtered_items, selected = NULL, server = TRUE)
-    } else {
-      updateSelectizeInput(session, "item", choices = NULL, server = TRUE)
-    }
-  })
-  
-  basket <- reactiveVal(data.frame(Item = character(), Quantity = numeric(), stringsAsFactors = FALSE))
-  
-  observeEvent(input$add_to_basket, {
-    selected_item <- input$item
-    if (!is.null(selected_item) && selected_item != "") {
-      current_basket <- basket()
-      if (selected_item %in% current_basket$Item) {
-        current_basket$Quantity[current_basket$Item == selected_item] <- current_basket$Quantity[current_basket$Item == selected_item] + 1
-      } else {
-        new_item <- data.frame(Item = selected_item, Quantity = 1, stringsAsFactors = FALSE)
-        current_basket <- rbind(current_basket, new_item)
-      }
-      basket(current_basket)
-    }
-  })
-  
-  observe({
-    current_basket <- basket()
-    lapply(1:nrow(current_basket), function(i) {
-      observeEvent(input[[paste0("remove_", current_basket$Item[i])]], {
-        item_to_remove <- current_basket$Item[i]
-        current_basket <- basket()
-        current_basket <- current_basket[current_basket$Item != item_to_remove, ]
-        basket(current_basket)
-      })
-    })
-  })
-  
-  output$basket_ui <- renderUI({
-    current_basket <- basket()
-    if (nrow(current_basket) == 0) {
-      return(NULL)
-    }
-    basket_ui <- lapply(1:nrow(current_basket), function(i) {
-      fluidRow(
-        column(8, current_basket$Item[i]),
-        column(2, current_basket$Quantity[i]),
-        column(2, actionButton(paste0("remove_", current_basket$Item[i]), "x", class = "btn-danger"))
-      )
-    })
-    do.call(tagList, basket_ui)
-  })
-  
-  cumulative_values <- reactive({
-    current_basket <- basket()
-    if (nrow(current_basket) == 0) {
-      return(NULL)
-    }
-    cumulative_data <- menu_data %>%
-      filter(Item %in% current_basket$Item) %>%
-      inner_join(current_basket, by = "Item") %>%
-      mutate(across(starts_with("Calories"), ~ . * Quantity)) %>%
-      summarise(across(starts_with("Calories"), sum, na.rm = TRUE))
+  # Dynamic logo rendering
+  output$dynamic_logo <- renderUI({
+    req(input$company)  # Ensure a company is selected
     
-    recommended_intake <- guideline_data[guideline_data$Age.Range == input$age & guideline_data$Gender == input$gender, ]
-    cumulative_data <- bind_rows(cumulative_data, recommended_intake)
-    cumulative_data
+    # Map company to logo file
+    logo_file <- switch(input$company,
+                        "McDonald’s" = "mcdonalds_logo.jpg",
+                        "Burger King" = "burgerking_logo.jpg",
+                        "KFC" = "kfc_logo.jpg",
+                        "Pizza Hut" = "pizzahut_logo.jpg",
+                        "Taco Bell" = "tacobell_logo.jpg",
+                        "Wendy’s" = "wendys_logo.jpg",
+                        NULL)  # Default if no match
+    
+    # Render the logo dynamically
+    if (!is.null(logo_file)) {
+      img(src = logo_file, height = "75px", style = "margin-bottom: 10px;")
+    }
   })
   
-  output$cumulative_values <- renderTable({
-    cumulative_values()
+  # Disable Page 2 tab initially
+  observe({
+    shinyjs::disable(selector = "a[data-value='page2']")
   })
   
-  createPlot <- function(column, plotTitle, color) {
-    renderPlot({
-      if (is.null(input$age) || is.null(input$gender) || 
-          is.null(input$restaurant) || input$restaurant == "" || 
-          is.null(input$item) || input$item == "") {
-        return(NULL)
-      }
-      
-      selected_item <- input$item
-      item_data <- menu_data[menu_data$Item == selected_item & menu_data$Company == input$restaurant, ]
-      
-      item_data[[column]] <- as.numeric(item_data[[column]])
-      
-      if (length(item_data[[column]]) == 0 || all(is.na(item_data[[column]]))) {
-        return(NULL)
-      }
-      
-      recommended_intake <- guideline_data[guideline_data$Age.Range == input$age & guideline_data$Gender == input$gender, column]
-      
-      if (length(recommended_intake) == 0 || is.na(recommended_intake)) {
-        return(NULL)
-      }
-      
-      ylim_max <- max(recommended_intake * 1.25, max(item_data[[column]], na.rm = TRUE) * 1.25, 0)
-      
-      if (max(item_data[[column]], na.rm = TRUE) > recommended_intake) {
-        showModal(modalDialog(
-          title = "Nutritional Alert",
-          paste("The nutritional value of this item exceeds your recommended daily intake!"),
-          easyClose = TRUE,
-          footer = NULL
-        ))
-      }
-      
-      barplot(item_data[[column]], names.arg = NULL, main = plotTitle, col = color, ylim = c(0, ylim_max), las = 2)
-      
-      abline(h = recommended_intake, col = "red", lwd = 2, lty = 2)
-      
-      legend("topright", inset = c(-0.2, 0), legend = c(column, "Recommended Daily Intake"), col = c(color, "red"), lwd = 2, lty = c(1, 2), bty = "n")
-    })
-  }
+  # Store the selected restaurant and navigate to the next page when the button is clicked
+  observeEvent(input$next_page, {
+    selected_restaurant(input$company)
+    button_clicked(TRUE)
+    shinyjs::enable(selector = "a[data-value='page2']")
+    updateNavbarPage(session, "navbar", selected = "page2")
+  })
   
-  output$caloriesPlot <- createPlot("Calories", "Calories", "blue")
-  output$fatPlot <- createPlot("Total.Fat..g.", "Total Fat", "green")
-  output$saturatedFatPlot <- createPlot("Saturated.Fat..g.", "Saturated Fat", "purple")
-  output$saltPlot <- createPlot("Salt.g", "Salt", "orange")
-  output$carbsPlot <- createPlot("Carbs..g.", "Carbohydrates", "yellow")
-  output$fiberPlot <- createPlot("Fiber..g.", "Fiber", "brown")
-  output$sugarsPlot <- createPlot("Sugars..g.", "Sugars", "pink")
-  output$proteinPlot <- createPlot("Protein..g.", "Protein", "cyan")
-  
-  createStackedPlot <- function(column, plotTitle, colors) {
-    renderPlot({
-      current_basket <- basket()
-      if (nrow(current_basket) == 0) {
-        return(NULL)
-      }
-      
-      cumulative_data <- menu_data %>%
-        filter(Item %in% current_basket$Item) %>%
-        inner_join(current_basket, by = "Item") %>%
-        mutate(across(starts_with(column), ~ . * Quantity)) %>%
-        group_by(Item) %>%
-        summarise(across(starts_with(column), sum, na.rm = TRUE))
-      
-      if (nrow(cumulative_data) == 0) {
-        return(NULL)
-      }
-      
-      barplot(as.matrix(cumulative_data[, -1]), beside = FALSE, col = colors, main = plotTitle, las = 2)
-      legend("topright", legend = cumulative_data$Item, fill = colors, bty = "n")
-    })
-  }
-  
-  output$cumulativeCaloriesPlot <- createStackedPlot("Calories", "Cumulative Calories", rainbow(nrow(basket())))
-  output$cumulativeFatPlot <- createStackedPlot("Total.Fat..g.", "Cumulative Total Fat", rainbow(nrow(basket())))
-  output$cumulativeSaturatedFatPlot <- createStackedPlot("Saturated.Fat..g.", "Cumulative Saturated Fat", rainbow(nrow(basket())))
-  output$cumulativeSaltPlot <- createStackedPlot("Salt.g", "Cumulative Salt", rainbow(nrow(basket())))
-  output$cumulativeCarbsPlot <- createStackedPlot("Carbs..g.", "Cumulative Carbohydrates", rainbow(nrow(basket())))
-  output$cumulativeFiberPlot <- createStackedPlot("Fiber..g.", "Cumulative Fiber", rainbow(nrow(basket())))
-  output$cumulativeSugarsPlot <- createStackedPlot("Sugars..g.", "Cumulative Sugars", rainbow(nrow(basket())))
-  output$cumulativeProteinPlot <- createStackedPlot("Protein..g.", "Cumulative Protein", rainbow(nrow(basket())))
+
+  # Render the content for Page 2
+  output$page2_content <- renderUI({
+    req(selected_restaurant())
+    restaurant <- selected_restaurant()
+    categories <- unique(fastfood_data %>% filter(Company == restaurant) %>% pull(Category))
+    
+    fluidRow(
+      column(12,
+             h3(paste("What are you craving from", restaurant, "?"), class = "center-text"),
+             selectInput("category", "", choices = categories)
+      )
+    )
+  })
 }
 
+# Run the app
 shinyApp(ui = ui, server = server)
-
-#hello

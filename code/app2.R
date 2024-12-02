@@ -110,7 +110,15 @@ ui <- fluidPage(
         padding: 10px;
         border-bottom: 1px solid #ddd;
       }
-    "))
+    ")),
+    shinyjs::extendShinyjs(
+      text = "
+      shinyjs.resetRemoveItem = function() {
+          Shiny.onInputChange('remove_item', null);
+      }
+      ",
+      functions = c("resetRemoveItem")
+    )
   ),
   div(style = "text-align: center;",
       uiOutput("dynamic_logo"),  # Placeholder for dynamic logo
@@ -344,8 +352,11 @@ server <- function(input, output, session) {
         current_basket <- current_basket[-item_index, ]
       }
       basket(current_basket)
+      # Reset the input value to allow for subsequent clicks
+      shinyjs::js$resetRemoveItem()
     }
   })
+  
   
   # Render the basket contents (list of item names and quantities)
   output$basket_contents <- renderUI({

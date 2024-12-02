@@ -177,7 +177,7 @@ ui <- fluidPage(
                                  ),
                                  column(6,
                                         div(class = "progress-circle",
-                                            h3("Cumulative Total"),
+                                            h3("Total Basket as % of recommended daily intake"),
                                             fluidRow(
                                               column(6, uiOutput("total_calories")),
                                               column(6, uiOutput("total_fat"))
@@ -309,9 +309,6 @@ server <- function(input, output, session) {
           div(class = "detail-card", style = paste("background-color:", get_color(item$Salt.g, guideline$Salt.g)),
               h4("Salt"),
               p(paste(item$Salt.g, "g"))
-          ),
-          div(class = "center-button",
-              actionButton("add_to_basket", "Add to Basket", class = "action-button")
           )
       )
     } else {

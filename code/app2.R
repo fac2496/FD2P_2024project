@@ -193,6 +193,29 @@ ui <- fluidPage(
                       )
              )
              
+  ),
+  # Modal pop-up
+  tags$div(id = "warningModal", class = "modal", tabindex = "-1", role = "dialog",
+           tags$div(class = "modal-dialog", role = "document",
+                    tags$div(class = "modal-content",
+                             tags$div(class = "modal-header",
+                                      tags$h5(class = "modal-title", "Warning"),
+                                      tags$button(type = "button", class = "close", `data-dismiss` = "modal", `aria-label` = "Close",
+                                                  tags$span(`aria-hidden` = "true", "×")
+                                      )
+                             ),
+                             tags$div(class = "modal-body",
+                                      tags$p("The item you are trying to add exceeds the daily recommended intake."),
+                                      tags$p("What would you like to do?")
+                             ),
+                             tags$div(class = "modal-footer",
+                                      actionButton("remove_item", "Remove This Item", class = "btn btn-danger"),
+                                      actionButton("remove_other_items", "Remove Other Items", class = "btn btn-warning"),
+                                      actionButton("replace_item", "Replace with Healthier Alternative", class = "btn btn-success"),
+                                      tags$button(type = "button", class = "btn btn-secondary", `data-dismiss` = "modal", "Close")
+                             )
+                    )
+           )
   )
 )
 
@@ -319,22 +342,86 @@ server <- function(input, output, session) {
   # Initialize basket with quantity column
   basket <- reactiveVal(data.frame(Item = character(), Quantity = numeric(), Calories = numeric(), Total.Fat..g. = numeric(), Sugars..g. = numeric(), Salt.g = numeric(), stringsAsFactors = FALSE))
   
-  # Add item to basket
+  # Add item to basket with intake check
   observeEvent(input$add_to_basket, {
     req(input$item)
     item_data <- fastfood_data %>% filter(Item == input$item)
-    if (nrow(item_data) > 0) {
+    guideline_data <- guidelines()
+    
+    if (nrow(item_data) > 0 && nrow(guideline_data) > 0) {
       item <- item_data[1, ]
-      current_basket <- basket()
-      item_index <- which(current_basket$Item == item$Item)
-      if (length(item_index) > 0) {
-        current_basket$Quantity[item_index] <- current_basket$Quantity[item_index] + 1
+      guideline <- guideline_data[1, ]
+      
+      # Check if the item exceeds the daily recommended intake
+      exceeds_intake <- item$Calories > guideline$Calories ||
+        item$Total.Fat..g. > guideline$Total.Fat..g. ||
+        item$Sugars..g. > guideline$Sugars..g. ||
+        item$Salt.g > guideline$Salt.g
+      
+      if (exceeds_intake) {
+        # Trigger the modal
+        shinyjs::runjs("$('#warningModal').modal('show')")
       } else {
-        new_item <- data.frame(Item = item$Item, Quantity = 1, Calories = item$Calories, Total.Fat..g. = item$Total.Fat..g., Sugars..g. = item$Sugars..g., Salt.g = item$Salt.g, stringsAsFactors = FALSE)
-        current_basket <- rbind(current_basket, new_item)
+        # Add the item to the basket
+        current_basket <- basket()
+        item_index <- which(current_basket$Item == item$Item)
+        if (length(item_index) > 0) {
+          current_basket$Quantity[item_index] <- current_basket$Quantity[item_index] + 1
+        } else {
+          new_item <- data.frame(Item = item$Item, Quantity = 1, Calories = item$Calories, Total.Fat..g. = item$Total.Fat..g., Sugars..g. = item$Sugars..g., Salt.g = item$Salt.g, stringsAsFactors = FALSE)
+          current_basket <- rbind(current_basket, new_item)
+        }
+        basket(current_basket)
       }
-      basket(current_basket)
     }
+  })
+  
+  # Handle user choice to remove the specific item
+  observeEvent(input$remove_item, {
+    shinyjs::runjs("$('#warningModal').modal('hide')")
+  })
+  
+  # Handle user choice to remove other items
+  observeEvent(input$remove_other_items, {
+    # Logic to remove other items from the basket
+    shinyjs::runjs("$('#warningModal').modal('hide')")
+  })
+  
+  # Handle user choice to replace with a healthier alternative
+  observeEvent(input$replace_item, {
+    req(input$item)
+    item_data <- fastfood_data %>% filter(Item == input$item)
+    guideline_data <- guidelines()
+    
+    if (nrow(item_data) > 0 && nrow(guideline_data) > 0) {
+      item <- item_data[1, ]
+      guideline <- guideline_data[1, ]
+      
+      # Find a healthier alternative
+      healthier_alternatives <- fastfood_data %>%
+        filter(Company == selected_restaurant(),
+               Category == input$category,
+               Calories <= guideline$Calories,
+               Total.Fat..g. <= guideline$Total.Fat..g.,
+               Sugars..g. <= guideline$Sugars..g.,
+               Salt.g <= guideline$Salt.g)
+      
+      if (nrow(healthier_alternatives) > 0) {
+        healthier_item <- healthier_alternatives[1, ]
+        
+        # Add the healthier item to the basket
+        current_basket <- basket()
+        item_index <- which(current_basket$Item == healthier_item$Item)
+        if (length(item_index) > 0) {
+          current_basket$Quantity[item_index] <- current_basket$Quantity[item_index] + 1
+        } else {
+          new_item <- data.frame(Item = healthier_item$Item, Quantity = 1, Calories = healthier_item$Calories, Total.Fat..g. = healthier_item$Total.Fat..g., Sugars..g. = healthier_item$Sugars..g., Salt.g = healthier_item$Salt.g, stringsAsFactors = FALSE)
+          current_basket <- rbind(current_basket, new_item)
+        }
+        basket(current_basket)
+      }
+    }
+    shinyjs::runjs("$('#warningModal').modal('hide')")
   })
   
   # Remove item from basket

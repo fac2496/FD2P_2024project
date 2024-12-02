@@ -170,8 +170,13 @@ ui <- fluidPage(
                                  column(6,
                                         div(class = "progress-circle",
                                             h3("Cumulative Total"),
-                                            div(style = "display: flex; flex-wrap: wrap; justify-content: space-around;",
-                                                uiOutput("cumulative_total")  # Placeholder for cumulative total
+                                            fluidRow(
+                                              column(6, uiOutput("total_calories")),
+                                              column(6, uiOutput("total_fat"))
+                                            ),
+                                            fluidRow(
+                                              column(6, uiOutput("total_sugars")),
+                                              column(6, uiOutput("total_salt"))
                                             )
                                         )
                                  )
@@ -360,45 +365,92 @@ server <- function(input, output, session) {
     }
   })
   
-  # Calculate and render the cumulative total
-  output$cumulative_total <- renderUI({
+  # Function to get color based on percentage
+  get_color <- function(percentage) {
+    if (percentage <= 50) {
+      return("#28a745")  # Green
+    } else if (percentage <= 100) {
+      return("#ffc107")  # Yellow
+    } else {
+      return("#dc3545")  # Red
+    }
+  }
+  
+  # Calculate and render the cumulative total with conditional formatting
+  output$total_calories <- renderUI({
     basket_data <- basket()
     if (nrow(basket_data) > 0) {
+      guideline <- guidelines()
       total_calories <- sum(basket_data$Calories * basket_data$Quantity)
+      recommended_calories <- guideline$Calories[1]
+      percentage <- (total_calories / recommended_calories) * 100
+      color <- get_color(percentage)
+      div(style = "text-align: center;",
+          h4("Total Calories"),
+          tags$svg(width = "100", height = "100",
+                   tags$circle(cx = "50", cy = "50", r = "45", stroke = color, "stroke-width" = "10", fill = "none"),
+                   tags$text(x = "50%", y = "50%", "text-anchor" = "middle", dy = ".3em", paste0(round(percentage), "%"))
+          )
+      )
+    } else {
+      h4("No items in the basket.")
+    }
+  })
+  
+  output$total_fat <- renderUI({
+    basket_data <- basket()
+    if (nrow(basket_data) > 0) {
+      guideline <- guidelines()
       total_fat <- sum(basket_data$Total.Fat..g. * basket_data$Quantity)
+      recommended_fat <- guideline$Total.Fat..g.[1]
+      percentage <- (total_fat / recommended_fat) * 100
+      color <- get_color(percentage)
+      div(style = "text-align: center;",
+          h4("Total Fat"),
+          tags$svg(width = "100", height = "100",
+                   tags$circle(cx = "50", cy = "50", r = "45", stroke = color, "stroke-width" = "10", fill = "none"),
+                   tags$text(x = "50%", y = "50%", "text-anchor" = "middle", dy = ".3em", paste0(round(percentage), "%"))
+          )
+      )
+    } else {
+      h4("No items in the basket.")
+    }
+  })
+  
+  output$total_sugars <- renderUI({
+    basket_data <- basket()
+    if (nrow(basket_data) > 0) {
+      guideline <- guidelines()
       total_sugars <- sum(basket_data$Sugars..g. * basket_data$Quantity)
+      recommended_sugars <- guideline$Sugars..g.[1]
+      percentage <- (total_sugars / recommended_sugars) * 100
+      color <- get_color(percentage)
+      div(style = "text-align: center;",
+          h4("Total Sugars"),
+          tags$svg(width = "100", height = "100",
+                   tags$circle(cx = "50", cy = "50", r = "45", stroke = color, "stroke-width" = "10", fill = "none"),
+                   tags$text(x = "50%", y = "50%", "text-anchor" = "middle", dy = ".3em", paste0(round(percentage), "%"))
+          )
+      )
+    } else {
+      h4("No items in the basket.")
+    }
+  })
+  
+  output$total_salt <- renderUI({
+    basket_data <- basket()
+    if (nrow(basket_data) > 0) {
+      guideline <- guidelines()
       total_salt <- sum(basket_data$Salt.g * basket_data$Quantity)
-      
-      # Example progress circles (you can customize this as needed)
-      tagList(
-        div(style = "text-align: center; width: 50%;",
-            h4("Total Calories"),
-            tags$svg(width = "100", height = "100",
-                     tags$circle(cx = "50", cy = "50", r = "45", stroke = "#28a745", "stroke-width" = "10", fill = "none"),
-                     tags$text(x = "50%", y = "50%", "text-anchor" = "middle", dy = ".3em", total_calories)
-            )
-        ),
-        div(style = "text-align: center; width: 50%;",
-            h4("Total Fat"),
-            tags$svg(width = "100", height = "100",
-                     tags$circle(cx = "50", cy = "50", r = "45", stroke = "#ffc107", "stroke-width" = "10", fill = "none"),
-                     tags$text(x = "50%", y = "50%", "text-anchor" = "middle", dy = ".3em", total_fat, "g")
-            )
-        ),
-        div(style = "text-align: center; width: 50%;",
-            h4("Total Sugars"),
-            tags$svg(width = "100", height = "100",
-                     tags$circle(cx = "50", cy = "50", r = "45", stroke = "#dc3545", "stroke-width" = "10", fill = "none"),
-                     tags$text(x = "50%", y = "50%", "text-anchor" = "middle", dy = ".3em", total_sugars, "g")
-            )
-        ),
-        div(style = "text-align: center; width: 50%;",
-            h4("Total Salt"),
-            tags$svg(width = "100", height = "100",
-                     tags$circle(cx = "50", cy = "50", r = "45", stroke = "#17a2b8", "stroke-width" = "10", fill = "none"),
-                     tags$text(x = "50%", y = "50%", "text-anchor" = "middle", dy = ".3em", total_salt, "g")
-            )
-        )
+      recommended_salt <- guideline$Salt.g[1]
+      percentage <- (total_salt / recommended_salt) * 100
+      color <- get_color(percentage)
+      div(style = "text-align: center;",
+          h4("Total Salt"),
+          tags$svg(width = "100", height = "100",
+                   tags$circle(cx = "50", cy = "50", r = "45", stroke = color, "stroke-width" = "10", fill = "none"),
+                   tags$text(x = "50%", y = "50%", "text-anchor" = "middle", dy = ".3em", paste0(round(percentage), "%"))
+          )
       )
     } else {
       h4("No items in the basket.")

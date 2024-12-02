@@ -160,13 +160,26 @@ ui <- fluidPage(
                         ),
                         column(9,
                                uiOutput("item_details"),  # Placeholder for item details
-                               div(class = "basket",
-                                   h3("Basket"),
-                                   uiOutput("basket_contents")  # Placeholder for basket contents
+                               fluidRow(
+                                 column(6,
+                                        div(class = "basket",
+                                            h3("Basket"),
+                                            uiOutput("basket_contents")  # Placeholder for basket contents
+                                        )
+                                 ),
+                                 column(6,
+                                        div(class = "progress-circle",
+                                            h3("Cumulative Total"),
+                                            div(style = "display: flex; flex-wrap: wrap; justify-content: space-around;",
+                                                uiOutput("cumulative_total")  # Placeholder for cumulative total
+                                            )
+                                        )
+                                 )
                                )
                         )
                       )
              )
+             
   )
 )
 
@@ -293,6 +306,9 @@ server <- function(input, output, session) {
     }
   })
   
+  # Initialize basket with quantity column
+  basket <- reactiveVal(data.frame(Item = character(), Quantity = numeric(), Calories = numeric(), Total.Fat..g. = numeric(), Sugars..g. = numeric(), Salt.g = numeric(), stringsAsFactors = FALSE))
+  
   # Add item to basket
   observeEvent(input$add_to_basket, {
     req(input$item)
@@ -300,27 +316,92 @@ server <- function(input, output, session) {
     if (nrow(item_data) > 0) {
       item <- item_data[1, ]
       current_basket <- basket()
-      new_basket <- rbind(current_basket, item)
-      basket(new_basket)
+      item_index <- which(current_basket$Item == item$Item)
+      if (length(item_index) > 0) {
+        current_basket$Quantity[item_index] <- current_basket$Quantity[item_index] + 1
+      } else {
+        new_item <- data.frame(Item = item$Item, Quantity = 1, Calories = item$Calories, Total.Fat..g. = item$Total.Fat..g., Sugars..g. = item$Sugars..g., Salt.g = item$Salt.g, stringsAsFactors = FALSE)
+        current_basket <- rbind(current_basket, new_item)
+      }
+      basket(current_basket)
     }
   })
   
-  # Render the basket contents
+  # Remove item from basket
+  observeEvent(input$remove_item, {
+    req(input$remove_item)
+    current_basket <- basket()
+    item_index <- which(current_basket$Item == input$remove_item)
+    if (length(item_index) > 0) {
+      if (current_basket$Quantity[item_index] > 1) {
+        current_basket$Quantity[item_index] <- current_basket$Quantity[item_index] - 1
+      } else {
+        current_basket <- current_basket[-item_index, ]
+      }
+      basket(current_basket)
+    }
+  })
+  
+  # Render the basket contents (list of item names and quantities)
   output$basket_contents <- renderUI({
     basket_data <- basket()
     if (nrow(basket_data) > 0) {
-      lapply(1:nrow(basket_data), function(i) {
-        item <- basket_data[i, ]
-        div(class = "basket-item",
-            h4(item$Item),
-            p(paste("Calories:", item$Calories)),
-            p(paste("Total Fat:", item$Total.Fat..g., "g")),
-            p(paste("Sugars:", item$Sugars..g., "g")),
-            p(paste("Salt:", item$Salt.g, "g"))
-        )
-      })
+      tags$ul(
+        lapply(1:nrow(basket_data), function(i) {
+          item <- basket_data[i, ]
+          tags$li(
+            paste(item$Item, "x", item$Quantity),
+            actionButton(inputId = paste0("remove_", item$Item), label = "Remove", class = "btn btn-danger btn-sm", onclick = sprintf("Shiny.onInputChange('%s', '%s')", "remove_item", item$Item))
+          )
+        })
+      )
     } else {
       h4("Your basket is empty.")
+    }
+  })
+  
+  # Calculate and render the cumulative total
+  output$cumulative_total <- renderUI({
+    basket_data <- basket()
+    if (nrow(basket_data) > 0) {
+      total_calories <- sum(basket_data$Calories * basket_data$Quantity)
+      total_fat <- sum(basket_data$Total.Fat..g. * basket_data$Quantity)
+      total_sugars <- sum(basket_data$Sugars..g. * basket_data$Quantity)
+      total_salt <- sum(basket_data$Salt.g * basket_data$Quantity)
+      
+      # Example progress circles (you can customize this as needed)
+      tagList(
+        div(style = "text-align: center; width: 50%;",
+            h4("Total Calories"),
+            tags$svg(width = "100", height = "100",
+                     tags$circle(cx = "50", cy = "50", r = "45", stroke = "#28a745", "stroke-width" = "10", fill = "none"),
+                     tags$text(x = "50%", y = "50%", "text-anchor" = "middle", dy = ".3em", total_calories)
+            )
+        ),
+        div(style = "text-align: center; width: 50%;",
+            h4("Total Fat"),
+            tags$svg(width = "100", height = "100",
+                     tags$circle(cx = "50", cy = "50", r = "45", stroke = "#ffc107", "stroke-width" = "10", fill = "none"),
+                     tags$text(x = "50%", y = "50%", "text-anchor" = "middle", dy = ".3em", total_fat, "g")
+            )
+        ),
+        div(style = "text-align: center; width: 50%;",
+            h4("Total Sugars"),
+            tags$svg(width = "100", height = "100",
+                     tags$circle(cx = "50", cy = "50", r = "45", stroke = "#dc3545", "stroke-width" = "10", fill = "none"),
+                     tags$text(x = "50%", y = "50%", "text-anchor" = "middle", dy = ".3em", total_sugars, "g")
+            )
+        ),
+        div(style = "text-align: center; width: 50%;",
+            h4("Total Salt"),
+            tags$svg(width = "100", height = "100",
+                     tags$circle(cx = "50", cy = "50", r = "45", stroke = "#17a2b8", "stroke-width" = "10", fill = "none"),
+                     tags$text(x = "50%", y = "50%", "text-anchor" = "middle", dy = ".3em", total_salt, "g")
+            )
+        )
+      )
+    } else {
+      h4("No items in the basket.")
     }
   })
 }

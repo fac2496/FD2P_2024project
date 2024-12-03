@@ -399,6 +399,25 @@ server <- function(input, output, session) {
     shinyjs::runjs("$('#warningModal').modal('hide')")
   })
   
+  # Handle user choice to add to basket from modal
+  observeEvent(input$confirm_add, {
+    req(input$item)
+    item_data <- fastfood_data %>% filter(Item == input$item)
+    if (nrow(item_data) > 0) {
+      item <- item_data[1, ]
+      current_basket <- basket()
+      item_index <- which(current_basket$Item == item$Item)
+      if (length(item_index) > 0) {
+        current_basket$Quantity[item_index] <- current_basket$Quantity[item_index] + 1
+      } else {
+        new_item <- data.frame(Item = item$Item, Quantity = 1, Calories = item$Calories, Total.Fat..g. = item$Total.Fat..g., Sugars..g. = item$Sugars..g., Salt.g = item$Salt.g, stringsAsFactors = FALSE)
+        current_basket <- rbind(current_basket, new_item)
+      }
+      basket(current_basket)
+    }
+    shinyjs::runjs("$('#warningModal').modal('hide')")
+  })
+  
   # Handle user choice to replace with a healthier alternative
   observeEvent(input$replace_item, {
     req(input$item)
@@ -483,6 +502,18 @@ server <- function(input, output, session) {
     }
   }
   
+  # Function to generate SVG for progress circle
+  generate_progress_circle <- function(percentage, color) {
+    svg <- sprintf('
+      <svg width="100" height="100">
+        <circle cx="50" cy="50" r="45" stroke="%s" stroke-width="10" fill="none"
+                stroke-dasharray="%f %f" transform="rotate(-90 50 50)" />
+        <text x="50%%" y="50%%" text-anchor="middle" dy=".3em">%d%%</text>
+      </svg>
+    ', color, percentage * 2.83, 283 - percentage * 2.83, round(percentage))
+    return(svg)
+  }
+  
   # Calculate and render the cumulative total with conditional formatting
   output$total_calories <- renderUI({
     basket_data <- basket()
@@ -492,13 +523,7 @@ server <- function(input, output, session) {
       recommended_calories <- guideline$Calories[1]
       percentage <- (total_calories / recommended_calories) * 100
       color <- get_color(percentage)
-      div(style = "text-align: center;",
-          h4("Total Calories"),
-          tags$svg(width = "100", height = "100",
-                   tags$circle(cx = "50", cy = "50", r = "45", stroke = color, "stroke-width" = "10", fill = "none"),
-                   tags$text(x = "50%", y = "50%", "text-anchor" = "middle", dy = ".3em", paste0(round(percentage), "%"))
-          )
-      )
+      HTML(generate_progress_circle(percentage, color))
     } else {
       h4("No items in the basket.")
     }
@@ -512,13 +537,7 @@ server <- function(input, output, session) {
       recommended_fat <- guideline$Total.Fat..g.[1]
       percentage <- (total_fat / recommended_fat) * 100
       color <- get_color(percentage)
-      div(style = "text-align: center;",
-          h4("Total Fat"),
-          tags$svg(width = "100", height = "100",
-                   tags$circle(cx = "50", cy = "50", r = "45", stroke = color, "stroke-width" = "10", fill = "none"),
-                   tags$text(x = "50%", y = "50%", "text-anchor" = "middle", dy = ".3em", paste0(round(percentage), "%"))
-          )
-      )
+      HTML(generate_progress_circle(percentage, color))
     } else {
       h4("No items in the basket.")
     }
@@ -532,13 +551,7 @@ server <- function(input, output, session) {
       recommended_sugars <- guideline$Sugars..g.[1]
       percentage <- (total_sugars / recommended_sugars) * 100
       color <- get_color(percentage)
-      div(style = "text-align: center;",
-          h4("Total Sugars"),
-          tags$svg(width = "100", height = "100",
-                   tags$circle(cx = "50", cy = "50", r = "45", stroke = color, "stroke-width" = "10", fill = "none"),
-                   tags$text(x = "50%", y = "50%", "text-anchor" = "middle", dy = ".3em", paste0(round(percentage), "%"))
-          )
-      )
+      HTML(generate_progress_circle(percentage, color))
     } else {
       h4("No items in the basket.")
     }
@@ -552,13 +565,7 @@ server <- function(input, output, session) {
       recommended_salt <- guideline$Salt.g[1]
       percentage <- (total_salt / recommended_salt) * 100
       color <- get_color(percentage)
-      div(style = "text-align: center;",
-          h4("Total Salt"),
-          tags$svg(width = "100", height = "100",
-                   tags$circle(cx = "50", cy = "50", r = "45", stroke = color, "stroke-width" = "10", fill = "none"),
-                   tags$text(x = "50%", y = "50%", "text-anchor" = "middle", dy = ".3em", paste0(round(percentage), "%"))
-          )
-      )
+      HTML(generate_progress_circle(percentage, color))
     } else {
       h4("No items in the basket.")
     }

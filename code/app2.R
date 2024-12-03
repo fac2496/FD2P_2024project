@@ -110,6 +110,18 @@ ui <- fluidPage(
         padding: 10px;
         border-bottom: 1px solid #ddd;
       }
+      .modal-footer .btn {
+        margin-right: 10px;
+        padding: 5px 10px; /* Reduce button padding */
+        font-size: 14px; /* Reduce font size */
+      }
+      .modal-footer {
+        display: flex;
+        justify-content: space-between;
+      }
+      .modal-dialog {
+        max-width: 600px; /* Increase modal width */
+      }
     ")),
     shinyjs::extendShinyjs(
       text = "
@@ -199,19 +211,19 @@ ui <- fluidPage(
            tags$div(class = "modal-dialog", role = "document",
                     tags$div(class = "modal-content",
                              tags$div(class = "modal-header",
-                                      tags$h5(class = "modal-title", "Warning"),
+                                      tags$h5(class = "modal-title", "Warning: Exceeding Daily Recommended Intake"),
                                       tags$button(type = "button", class = "close", `data-dismiss` = "modal", `aria-label` = "Close",
                                                   tags$span(`aria-hidden` = "true", "×")
                                       )
                              ),
                              tags$div(class = "modal-body",
-                                      tags$p("The item you are trying to add exceeds the daily recommended intake."),
+                                      tags$p("Adding this item to the basket will exceed your daily recommended intake."),
                                       tags$p("What would you like to do?")
                              ),
                              tags$div(class = "modal-footer",
-                                      actionButton("remove_item", "Remove This Item", class = "btn btn-danger"),
+                                      actionButton("suggest_healthier", "Suggest Healthier Alternative", class = "btn btn-success"),
                                       actionButton("remove_other_items", "Remove Other Items", class = "btn btn-warning"),
-                                      actionButton("replace_item", "Replace with Healthier Alternative", class = "btn btn-success"),
+                                      actionButton("confirm_add", "Add to Basket", class = "btn btn-primary"),
                                       tags$button(type = "button", class = "btn btn-secondary", `data-dismiss` = "modal", "Close")
                              )
                     )

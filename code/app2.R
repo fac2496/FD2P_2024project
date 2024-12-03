@@ -249,6 +249,26 @@ ui <- fluidPage(
                              )
                     )
            )
+  ),
+  
+  # Healthier Alternatives Modal
+  tags$div(id = "healthierAlternativesModal", class = "modal", tabindex = "-1", role = "dialog",
+           tags$div(class = "modal-dialog", role = "document",
+                    tags$div(class = "modal-content",
+                             tags$div(class = "modal-header",
+                                      tags$h5(class = "modal-title", "Healthier Alternatives"),
+                                      tags$button(type = "button", class = "close", `data-dismiss` = "modal", `aria-label` = "Close",
+                                                  tags$span(`aria-hidden` = "true", "×")
+                                      )
+                             ),
+                             tags$div(class = "modal-body",
+                                      uiOutput("healthier_alternatives")
+                             ),
+                             tags$div(class = "modal-footer",
+                                      tags$button(type = "button", class = "btn btn-secondary", `data-dismiss` = "modal", "Close")
+                             )
+                    )
+           )
   )
 )
 
@@ -446,6 +466,137 @@ server <- function(input, output, session) {
         basket(current_basket)
       }
     }
+  })
+  
+  # Add item to basket with intake check
+  observeEvent(input$add_to_basket, {
+    req(input$item)
+    item_data <- fastfood_data %>% filter(Item == input$item)
+    guideline_data <- guidelines()
+    
+    if (nrow(item_data) > 0 && nrow(guideline_data) > 0) {
+      item <- item_data[1, ]
+      guideline <- guideline_data[1, ]
+      
+      exceeds_intake <- item$Calories > guideline$Calories ||
+        item$Total.Fat..g. > guideline$Total.Fat..g. ||
+        item$Sugars..g. > guideline$Sugars..g. ||
+        item$Salt.g > guideline$Salt.g
+      
+      current_basket <- basket()
+      total_calories <- sum(current_basket$Calories * current_basket$Quantity) + item$Calories
+      total_fat <- sum(current_basket$Total.Fat..g. * current_basket$Quantity) + item$Total.Fat..g.
+      total_sugars <- sum(current_basket$Sugars..g. * current_basket$Quantity) + item$Sugars..g.
+      total_salt <- sum(current_basket$Salt.g * current_basket$Quantity) + item$Salt.g
+      
+      exceeds_cumulative_intake <- total_calories > guideline$Calories ||
+        total_fat > guideline$Total.Fat..g. ||
+        total_sugars > guideline$Sugars..g. ||
+        total_salt > guideline$Salt.g
+      
+      if (exceeds_intake || exceeds_cumulative_intake) {
+        shinyjs::runjs("$('#warningModal').modal('show')")
+      } else {
+        item_index <- which(current_basket$Item == item$Item)
+        if (length(item_index) > 0) {
+          current_basket$Quantity[item_index] <- current_basket$Quantity[item_index] + 1
+        } else {
+          new_item <- data.frame(Item = item$Item, Quantity = 1, Calories = item$Calories, Total.Fat..g. = item$Total.Fat..g., Sugars..g. = item$Sugars..g., Salt.g = item$Salt.g, stringsAsFactors = FALSE)
+          current_basket <- rbind(current_basket, new_item)
+        }
+        basket(current_basket)
+      }
+    }
+  })
+  
+  # Handle user choice to replace with a healthier alternative
+  observeEvent(input$suggest_healthier, {
+    req(input$item)
+    item_data <- fastfood_data %>% filter(Item == input$item)
+    guideline_data <- guidelines()
+    
+    if (nrow(item_data) > 0 && nrow(guideline_data) > 0) {
+      item <- item_data[1, ]
+      guideline <- guideline_data[1, ]
+      
+      # Find healthier alternatives
+      healthier_alternatives <- fastfood_data %>%
+        filter(Company == selected_restaurant(),
+               Category == input$category,
+               Calories <= guideline$Calories,
+               Total.Fat..g. <= guideline$Total.Fat..g.,
+               Sugars..g. <= guideline$Sugars..g.,
+               Salt.g <= guideline$Salt.g) %>%
+        arrange(Calories, Total.Fat..g., Sugars..g., Salt.g) %>%
+        head(3)
+      
+      if (nrow(healthier_alternatives) > 0) {
+        # Display healthier alternatives
+        output$healthier_alternatives <- renderUI({
+          tagList(
+            h4("Healthier Alternatives:"),
+            tags$table(class = "table table-striped",
+                       tags$thead(
+                         tags$tr(
+                           tags$th("Item Name"),
+                           tags$th("Calories"),
+                           tags$th("Total Fat (g)"),
+                           tags$th("Sugars (g)"),
+                           tags$th("Salt (g)"),
+                           tags$th("Actions")
+                         )
+                       ),
+                       tags$tbody(
+                         tags$tr(
+                           tags$td(item$Item),
+                           tags$td(item$Calories),
+                           tags$td(item$Total.Fat..g.),
+                           tags$td(item$Sugars..g.),
+                           tags$td(item$Salt.g),
+                           tags$td()
+                         ),
+                         lapply(1:nrow(healthier_alternatives), function(i) {
+                           alt_item <- healthier_alternatives[i, ]
+                           tags$tr(
+                             tags$td(alt_item$Item),
+                             tags$td(style = ifelse(alt_item$Calories < item$Calories, "color: green;", ""), alt_item$Calories),
+                             tags$td(style = ifelse(alt_item$Total.Fat..g. < item$Total.Fat..g., "color: green;", ""), alt_item$Total.Fat..g.),
+                             tags$td(style = ifelse(alt_item$Sugars..g. < item$Sugars..g., "color: green;", ""), alt_item$Sugars..g.),
+                             tags$td(style = ifelse(alt_item$Salt.g < item$Salt.g, "color: green;", ""), alt_item$Salt.g),
+                             tags$td(actionButton(inputId = paste0("add_", alt_item$Item), label = "Add to Basket", class = "btn btn-success btn-sm"))
+                           )
+                         })
+                       )
+            )
+          )
+        })
+      } else {
+        output$healthier_alternatives <- renderUI({
+          h4("No healthier alternatives available.")
+        })
+      }
+    }
+    shinyjs::runjs("$('#warningModal').modal('hide')")
+    shinyjs::runjs("$('#healthierAlternativesModal').modal('show')")
+  })
+  
+  # Add healthier alternative to basket
+  observe({
+    lapply(1:nrow(fastfood_data), function(i) {
+      alt_item <- fastfood_data[i, ]
+      observeEvent(input[[paste0("add_", alt_item$Item)]], {
+        current_basket <- basket()
+        item_index <- which(current_basket$Item == alt_item$Item)
+        if (length(item_index) > 0) {
+          current_basket$Quantity[item_index] <- current_basket$Quantity[item_index] + 1
+        } else {
+          new_item <- data.frame(Item = alt_item$Item, Quantity = 1, Calories = alt_item$Calories, Total.Fat..g. = alt_item$Total.Fat..g., Sugars..g. = alt_item$Sugars..g., Salt.g = alt_item$Salt.g, stringsAsFactors = FALSE)
+          current_basket <- rbind(current_basket, new_item)
+        }
+        basket(current_basket)
+        shinyjs::runjs("$('#healthierAlternativesModal').modal('hide')")
+      })
+    })
   })
   
   # Handle user choice to remove the specific item

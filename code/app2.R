@@ -370,12 +370,24 @@ server <- function(input, output, session) {
         item$Sugars..g. > guideline$Sugars..g. ||
         item$Salt.g > guideline$Salt.g
       
-      if (exceeds_intake) {
+      # Calculate cumulative values with the new item added
+      current_basket <- basket()
+      total_calories <- sum(current_basket$Calories * current_basket$Quantity) + item$Calories
+      total_fat <- sum(current_basket$Total.Fat..g. * current_basket$Quantity) + item$Total.Fat..g.
+      total_sugars <- sum(current_basket$Sugars..g. * current_basket$Quantity) + item$Sugars..g.
+      total_salt <- sum(current_basket$Salt.g * current_basket$Quantity) + item$Salt.g
+      
+      # Check if cumulative values exceed the guidelines
+      exceeds_cumulative_intake <- total_calories > guideline$Calories ||
+        total_fat > guideline$Total.Fat..g. ||
+        total_sugars > guideline$Sugars..g. ||
+        total_salt > guideline$Salt.g
+      
+      if (exceeds_intake || exceeds_cumulative_intake) {
         # Trigger the modal
         shinyjs::runjs("$('#warningModal').modal('show')")
       } else {
         # Add the item to the basket
-        current_basket <- basket()
         item_index <- which(current_basket$Item == item$Item)
         if (length(item_index) > 0) {
           current_basket$Quantity[item_index] <- current_basket$Quantity[item_index] + 1
@@ -502,15 +514,16 @@ server <- function(input, output, session) {
     }
   }
   
-  # Function to generate SVG for progress circle
-  generate_progress_circle <- function(percentage, color) {
+  # Function to generate SVG for progress circle with label
+  generate_progress_circle <- function(percentage, color, label) {
     svg <- sprintf('
       <svg width="100" height="100">
         <circle cx="50" cy="50" r="45" stroke="%s" stroke-width="10" fill="none"
                 stroke-dasharray="%f %f" transform="rotate(-90 50 50)" />
-        <text x="50%%" y="50%%" text-anchor="middle" dy=".3em">%d%%</text>
+        <text x="50%%" y="45%%" text-anchor="middle" dy=".3em" font-size="11">%s</text>
+        <text x="50%%" y="55%%" text-anchor="middle" dy=".3em" font-size="9">%d%%</text>
       </svg>
-    ', color, percentage * 2.83, 283 - percentage * 2.83, round(percentage))
+    ', color, percentage * 2.83, 283 - percentage * 2.83, label, round(percentage))
     return(svg)
   }
   
@@ -523,7 +536,7 @@ server <- function(input, output, session) {
       recommended_calories <- guideline$Calories[1]
       percentage <- (total_calories / recommended_calories) * 100
       color <- get_color(percentage)
-      HTML(generate_progress_circle(percentage, color))
+      HTML(generate_progress_circle(percentage, color, "Calories"))
     } else {
       h4("No items in the basket.")
     }
@@ -537,7 +550,7 @@ server <- function(input, output, session) {
       recommended_fat <- guideline$Total.Fat..g.[1]
       percentage <- (total_fat / recommended_fat) * 100
       color <- get_color(percentage)
-      HTML(generate_progress_circle(percentage, color))
+      HTML(generate_progress_circle(percentage, color, "Fat"))
     } else {
       h4("No items in the basket.")
     }
@@ -551,7 +564,7 @@ server <- function(input, output, session) {
       recommended_sugars <- guideline$Sugars..g.[1]
       percentage <- (total_sugars / recommended_sugars) * 100
       color <- get_color(percentage)
-      HTML(generate_progress_circle(percentage, color))
+      HTML(generate_progress_circle(percentage, color, "Sugars"))
     } else {
       h4("No items in the basket.")
     }
@@ -565,7 +578,7 @@ server <- function(input, output, session) {
       recommended_salt <- guideline$Salt.g[1]
       percentage <- (total_salt / recommended_salt) * 100
       color <- get_color(percentage)
-      HTML(generate_progress_circle(percentage, color))
+      HTML(generate_progress_circle(percentage, color, "Salt"))
     } else {
       h4("No items in the basket.")
     }

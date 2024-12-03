@@ -217,13 +217,34 @@ ui <- fluidPage(
                                       )
                              ),
                              tags$div(class = "modal-body",
-                                      tags$p("Adding this item to the basket will exceed your daily recommended intake."),
-                                      tags$p("What would you like to do?")
+                                      tags$p("Adding this item to the basket will exceed your daily recommended intake.")
                              ),
                              tags$div(class = "modal-footer",
                                       actionButton("suggest_healthier", "Suggest Healthier Alternative", class = "btn btn-success"),
                                       actionButton("remove_other_items", "Remove Other Items", class = "btn btn-warning"),
                                       actionButton("confirm_add", "Add to Basket", class = "btn btn-primary"),
+                                      tags$button(type = "button", class = "btn btn-secondary", `data-dismiss` = "modal", "Close")
+                             )
+                    )
+           )
+  ),
+  
+  # Secondary pop-up for item removal
+  tags$div(id = "removeItemsModal", class = "modal", tabindex = "-1", role = "dialog",
+           tags$div(class = "modal-dialog", role = "document",
+                    tags$div(class = "modal-content",
+                             tags$div(class = "modal-header",
+                                      tags$h5(class = "modal-title", "Remove Items from Basket"),
+                                      tags$button(type = "button", class = "close", `data-dismiss` = "modal", `aria-label` = "Close",
+                                                  tags$span(`aria-hidden` = "true", "×")
+                                      )
+                             ),
+                             tags$div(class = "modal-body",
+                                      tags$p("Select quantities to remove:"),
+                                      uiOutput("basket_checklist")  # Placeholder for the checklist
+                             ),
+                             tags$div(class = "modal-footer",
+                                      actionButton("confirm_removal", "Confirm Removal", class = "btn btn-primary"),
                                       tags$button(type = "button", class = "btn btn-secondary", `data-dismiss` = "modal", "Close")
                              )
                     )
@@ -317,14 +338,13 @@ server <- function(input, output, session) {
       item <- item_data[1, ]
       guideline <- guideline_data[1, ]
       
-      # Function to determine the color based on the value and guideline
       get_color <- function(value, guideline_value) {
         if (value <= guideline_value * 0.5) {
-          return("#28a745")  # Green for low
+          return("#28a745")
         } else if (value <= guideline_value) {
-          return("#ffc107")  # Yellow for moderate
+          return("#ffc107")
         } else {
-          return("#dc3545")  # Red for high
+          return("#dc3545")
         }
       }
       
@@ -351,8 +371,41 @@ server <- function(input, output, session) {
     }
   })
   
-  # Initialize basket with quantity column
-  basket <- reactiveVal(data.frame(Item = character(), Quantity = numeric(), Calories = numeric(), Total.Fat..g. = numeric(), Sugars..g. = numeric(), Salt.g = numeric(), stringsAsFactors = FALSE))
+  # Render the checklist of basket items with numeric inputs
+  output$basket_checklist <- renderUI({
+    basket_data <- basket()
+    if (nrow(basket_data) > 0) {
+      tags$ul(
+        lapply(1:nrow(basket_data), function(i) {
+          item <- basket_data[i, ]
+          tags$li(
+            paste(item$Item, "x", item$Quantity),
+            numericInput(inputId = paste0("remove_qty_", item$Item), label = "Quantity to remove", value = 0, min = 0, max = item$Quantity)
+          )
+        })
+      )
+    } else {
+      h4("Your basket is empty.")
+    }
+  })
+  
+  # Handle the confirmation of item removal
+  observeEvent(input$confirm_removal, {
+    basket_data <- basket()
+    for (i in 1:nrow(basket_data)) {
+      item <- basket_data[i, ]
+      qty_to_remove <- input[[paste0("remove_qty_", item$Item)]]
+      if (!is.null(qty_to_remove) && qty_to_remove > 0) {
+        if (qty_to_remove >= item$Quantity) {
+          basket_data <- basket_data[-i, ]
+        } else {
+          basket_data$Quantity[i] <- basket_data$Quantity[i] - qty_to_remove
+        }
+      }
+    }
+    basket(basket_data)
+    shinyjs::runjs("$('#removeItemsModal').modal('hide')")
+  })
   
   # Add item to basket with intake check
   observeEvent(input$add_to_basket, {
@@ -364,30 +417,25 @@ server <- function(input, output, session) {
       item <- item_data[1, ]
       guideline <- guideline_data[1, ]
       
-      # Check if the item exceeds the daily recommended intake
       exceeds_intake <- item$Calories > guideline$Calories ||
         item$Total.Fat..g. > guideline$Total.Fat..g. ||
         item$Sugars..g. > guideline$Sugars..g. ||
         item$Salt.g > guideline$Salt.g
       
-      # Calculate cumulative values with the new item added
       current_basket <- basket()
       total_calories <- sum(current_basket$Calories * current_basket$Quantity) + item$Calories
       total_fat <- sum(current_basket$Total.Fat..g. * current_basket$Quantity) + item$Total.Fat..g.
       total_sugars <- sum(current_basket$Sugars..g. * current_basket$Quantity) + item$Sugars..g.
       total_salt <- sum(current_basket$Salt.g * current_basket$Quantity) + item$Salt.g
       
-      # Check if cumulative values exceed the guidelines
       exceeds_cumulative_intake <- total_calories > guideline$Calories ||
         total_fat > guideline$Total.Fat..g. ||
         total_sugars > guideline$Sugars..g. ||
         total_salt > guideline$Salt.g
       
       if (exceeds_intake || exceeds_cumulative_intake) {
-        # Trigger the modal
         shinyjs::runjs("$('#warningModal').modal('show')")
       } else {
-        # Add the item to the basket
         item_index <- which(current_basket$Item == item$Item)
         if (length(item_index) > 0) {
           current_basket$Quantity[item_index] <- current_basket$Quantity[item_index] + 1
@@ -407,8 +455,8 @@ server <- function(input, output, session) {
   
   # Handle user choice to remove other items
   observeEvent(input$remove_other_items, {
-    # Logic to remove other items from the basket
-    shinyjs::runjs("$('#warningModal').modal('hide')")
+    # Show the secondary pop-up for removing items
+    shinyjs::runjs("$('#removeItemsModal').modal('show')")
   })
   
   # Handle user choice to add to basket from modal

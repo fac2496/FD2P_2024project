@@ -133,6 +133,12 @@ ui <- fluidPage(
             .btn-remove:hover {
                 background-color: #c82333 !important; /* Darker red on hover */
             }
+        .shiny-input-container > label {
+            font-style: italic;
+            font-weight: normal;
+            text-align: center;
+            display: block;
+        }
         ")),
     shinyjs::extendShinyjs(
       text = "
@@ -156,14 +162,14 @@ ui <- fluidPage(
                                    h3("What are you craving today?", class = "center-text"),
                                    selectInput("company", "Pick a restaurant to order from:", choices = unique_companies),
                                    h3("How old are you?", class = "center-text"),
-                                   selectInput("age", "To understand your nutritional requirements", choices = unique_ages, selected = "19 - 29"),
+                                   selectInput("age", "Age range to understand nutritional needs", choices = unique_ages, selected = "19 - 29"),
                                    h3("What is your gender?", class = "center-text"),
                                    div(class = "center-radio",
-                                       div(class = "radio-label", "To understand your nutritional requirements"),
+                                       div(class = "radio-label", "Gender to understand nutritional needs"),
                                        radioButtons("gender", label = NULL, choices = unique_genders, inline = TRUE)
                                    ),
                                    div(class = "center-button",
-                                       actionButton("next_page", "Let's get started!", class = "action-button")
+                                       actionButton("next_page", "Let's start your order!", class = "action-button")
                                    )
                                )
                         )

@@ -165,7 +165,7 @@ ui <- fluidPage(
                                    selectInput("age", "Age range to understand nutritional needs", choices = unique_ages, selected = "19 - 29"),
                                    h3("What is your gender?", class = "center-text"),
                                    div(class = "center-radio",
-                                       div(class = "radio-label", "Gender to understand nutritional needs"),
+                                       div(class = "radio-label", style = "font-style: italic" ,"Gender to understand nutritional needs"),
                                        radioButtons("gender", label = NULL, choices = unique_genders, inline = TRUE)
                                    ),
                                    div(class = "center-button",
@@ -177,12 +177,15 @@ ui <- fluidPage(
              ),
              tabPanel("Menu", value = "page2",
                       fluidRow(
+                        h4("Understand how your meal contributes to your daily nutritional recommendation!", class = "center-text", style = "font-style: italic"),
                         column(12,
                                div(class = "legend",
-                                   span(class = "green"), "≤ 50% of daily recommendation",
-                                   span(class = "yellow"), "51% - 100% of daily recommendation",
-                                   span(class = "red"), "> 100% of daily recommendation"
+                                   span(class = "green"), "≤ 50% of total daily nutrition",
+                                   span(class = "yellow"), "51% - 100% of total daily nutrition",
+                                   span(class = "red"), "> 100% of daily total daily nutrition"
                                )
+                               
+                               
                         )
                       ),
                       fluidRow(
@@ -399,7 +402,7 @@ server <- function(input, output, session) {
         div(class = "item-details",
             div(class = "detail-card", style = paste("background-color:", get_color(item$Calories, guideline$Calories), "; color:", get_font_color(get_color(item$Calories, guideline$Calories)), ";"),
                 h4("Calories"),
-                p(item$Calories)
+                p(item$Calories, "kcal")
             ),
             div(class = "detail-card", style = paste("background-color:", get_color(item$Total.Fat..g., guideline$Total.Fat..g.), "; color:", get_font_color(get_color(item$Total.Fat..g., guideline$Total.Fat..g.)), ";"),
                 h4("Total Fat"),

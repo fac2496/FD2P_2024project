@@ -460,47 +460,7 @@ server <- function(input, output, session) {
     shinyjs::runjs("$('#removeItemsModal').modal('hide')")
   })
   
-  # Add item to basket with intake check
-  observeEvent(input$add_to_basket, {
-    req(input$item)
-    item_data <- fastfood_data %>% filter(Item == input$item)
-    guideline_data <- guidelines()
-    
-    if (nrow(item_data) > 0 && nrow(guideline_data) > 0) {
-      item <- item_data[1, ]
-      guideline <- guideline_data[1, ]
-      
-      exceeds_intake <- item$Calories > guideline$Calories ||
-        item$Total.Fat..g. > guideline$Total.Fat..g. ||
-        item$Sugars..g. > guideline$Sugars..g. ||
-        item$Salt.g > guideline$Salt.g
-      
-      current_basket <- basket()
-      total_calories <- sum(current_basket$Calories * current_basket$Quantity) + item$Calories
-      total_fat <- sum(current_basket$Total.Fat..g. * current_basket$Quantity) + item$Total.Fat..g.
-      total_sugars <- sum(current_basket$Sugars..g. * current_basket$Quantity) + item$Sugars..g.
-      total_salt <- sum(current_basket$Salt.g * current_basket$Quantity) + item$Salt.g
-      
-      exceeds_cumulative_intake <- total_calories > guideline$Calories ||
-        total_fat > guideline$Total.Fat..g. ||
-        total_sugars > guideline$Sugars..g. ||
-        total_salt > guideline$Salt.g
-      
-      if (exceeds_intake || exceeds_cumulative_intake) {
-        shinyjs::runjs("$('#warningModal').modal('show')")
-      } else {
-        item_index <- which(current_basket$Item == item$Item)
-        if (length(item_index) > 0) {
-          current_basket$Quantity[item_index] <- current_basket$Quantity[item_index] + 1
-        } else {
-          new_item <- data.frame(Item = item$Item, Quantity = 1, Calories = item$Calories, Total.Fat..g. = item$Total.Fat..g., Sugars..g. = item$Sugars..g., Salt.g = item$Salt.g, stringsAsFactors = FALSE)
-          current_basket <- rbind(current_basket, new_item)
-        }
-        basket(current_basket)
-      }
-    }
-  })
-  
+
   # Add item to basket with intake check
   observeEvent(input$add_to_basket, {
     req(input$item)

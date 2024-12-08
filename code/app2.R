@@ -18,120 +18,132 @@ ui <- fluidPage(
   useShinyjs(),
   tags$head(
     tags$style(HTML("
-      .center-text {
-        text-align: center;
-      }
-      .center-content {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-      }
-      .center-radio {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-      }
-      .radio-label {
-        text-align: center;
-        width: 100%;
-      }
-      .center-button {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-      }
-      .action-button {
-        background-color: #28a745; /* Bright green */
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-      }
-      .action-button:hover {
-        background-color: #218838; /* Darker green on hover */
-      }
-      .tile {
-        background-color: #f8f9fa;
-        padding: 20px;
-        border-radius: 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
-      }
-      .item-details {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-        margin-top: 20px;
-      }
-      .detail-card {
-        background-color: #ffffff;
-        padding: 15px;
-        border-radius: 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        flex: 1 1 calc(25% - 20px);
-        text-align: center;
-      }
-      .detail-card h4 {
-        margin: 10px 0;
-      }
-      .detail-card p {
-        margin: 0;
-      }
-      .legend {
-        background-color: #f8f9fa;
-        padding: 10px;
-        border-radius: 5px;
-        margin-bottom: 20px;
-        text-align: center;
-      }
-      .legend span {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        margin-right: 5px;
-        border-radius: 3px;
-      }
-      .legend .green {
-        background-color: #28a745;
-      }
-      .legend .yellow {
-        background-color: #ffc107;
-      }
-      .legend .red {
-        background-color: #dc3545;
-      }
-      .basket {
-        margin-top: 20px;
-      }
-      .basket-item {
-        padding: 10px;
-        border-bottom: 1px solid #ddd;
-      }
-      .modal-footer .btn {
-        margin-right: 10px;
-        padding: 5px 10px; /* Reduce button padding */
-        font-size: 14px; /* Reduce font size */
-      }
-      .modal-footer {
-        display: flex;
-        justify-content: space-between;
-      }
-      .modal-dialog {
-        max-width: 600px; /* Increase modal width */
-      }
-    ")),
+            .center-text {
+                text-align: center;
+            }
+            .center-content {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+            }
+            .center-radio {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+            }
+            .radio-label {
+                text-align: center;
+                width: 100%;
+            }
+            .center-button {
+                display: flex;
+                justify-content: center;
+                margin-top: 20px;
+            }
+            .action-button {
+                background-color: #28a745; /* Bright green */
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                font-size: 16px;
+                cursor: pointer;
+            }
+            .action-button:hover {
+                background-color: #218838; /* Darker green on hover */
+            }
+            .tile {
+                background-color: #f8f9fa;
+                padding: 20px;
+                border-radius: 5px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                margin-bottom: 20px;
+            }
+            .item-details {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 20px;
+                margin-top: 20px;
+            }
+            .detail-card {
+                background-color: #ffffff;
+                padding: 15px;
+                border-radius: 5px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                flex: 1 1 calc(25% - 20px);
+                text-align: center;
+            }
+            .detail-card h4 {
+                margin: 10px 0;
+            }
+            .detail-card p {
+                margin: 0;
+            }
+            .legend {
+                background-color: #f8f9fa;
+                padding: 10px;
+                border-radius: 5px;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+            .legend span {
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                margin-right: 5px;
+                border-radius: 3px;
+            }
+            .legend .green {
+                background-color: #28a745;
+            }
+            .legend .yellow {
+                background-color: #ffc107;
+            }
+            .legend .red {
+                background-color: #dc3545;
+            }
+            .basket {
+                margin-top: 20px;
+            }
+            .basket-item {
+                padding: 10px;
+                border-bottom: 1px solid #ddd;
+            }
+            .modal-footer .btn {
+                margin-right: 10px;
+                padding: 5px 10px; /* Reduce button padding */
+                font-size: 14px; /* Reduce font size */
+            }
+            .modal-footer {
+                display: flex;
+                justify-content: space-between;
+            }
+            .modal-dialog {
+                max-width: 600px; /* Increase modal width */
+            }
+            .btn-remove {
+                background-color: #dc3545 !important; /* Red */
+                color: white !important;
+                border: none !important;
+                padding: 5px 10px !important; /* Smaller padding */
+                font-size: 12px !important; /* Smaller font size */
+                cursor: pointer !important;
+            }
+            .btn-remove:hover {
+                background-color: #c82333 !important; /* Darker red on hover */
+            }
+        ")),
     shinyjs::extendShinyjs(
       text = "
-      shinyjs.resetRemoveItem = function() {
-          Shiny.onInputChange('remove_item', null);
-      }
-      ",
+            shinyjs.resetRemoveItem = function() {
+                Shiny.onInputChange('remove_item', null);
+            }
+            ",
       functions = c("resetRemoveItem")
     )
   ),
+  
   div(style = "text-align: center;",
       uiOutput("dynamic_logo"),  # Placeholder for dynamic logo
       h1(class = "serif-font", "Better Bites: Know Your Food")
@@ -144,7 +156,7 @@ ui <- fluidPage(
                                    h3("What are you craving today?", class = "center-text"),
                                    selectInput("company", "Pick a restaurant to order from:", choices = unique_companies),
                                    h3("How old are you?", class = "center-text"),
-                                   selectInput("age", "To understand your nutritional requirements", choices = unique_ages),
+                                   selectInput("age", "To understand your nutritional requirements", choices = unique_ages, selected = "19 - 29"),
                                    h3("What is your gender?", class = "center-text"),
                                    div(class = "center-radio",
                                        div(class = "radio-label", "To understand your nutritional requirements"),
@@ -157,7 +169,7 @@ ui <- fluidPage(
                         )
                       )
              ),
-             tabPanel("Page 2", value = "page2",
+             tabPanel("Menu", value = "page2",
                       fluidRow(
                         column(12,
                                div(class = "legend",
@@ -183,13 +195,13 @@ ui <- fluidPage(
                                fluidRow(
                                  column(6,
                                         div(class = "basket",
-                                            h3("Basket"),
+                                            h3("Your Order"),
                                             uiOutput("basket_contents")  # Placeholder for basket contents
                                         )
                                  ),
                                  column(6,
                                         div(class = "progress-circle",
-                                            h3("Total Basket as % of recommended daily intake"),
+                                            h3("Basket as % of your daily nutrition goals"),
                                             fluidRow(
                                               column(6, uiOutput("total_calories")),
                                               column(6, uiOutput("total_fat"))
@@ -360,36 +372,48 @@ server <- function(input, output, session) {
       
       get_color <- function(value, guideline_value) {
         if (value <= guideline_value * 0.5) {
-          return("#28a745")
+          return("#28a745")  # Green
         } else if (value <= guideline_value) {
-          return("#ffc107")
+          return("#ffc107")  # Yellow
         } else {
-          return("#dc3545")
+          return("#dc3545")  # Red
         }
       }
       
-      div(class = "item-details",
-          div(class = "detail-card", style = paste("background-color:", get_color(item$Calories, guideline$Calories)),
-              h4("Calories"),
-              p(item$Calories)
-          ),
-          div(class = "detail-card", style = paste("background-color:", get_color(item$Total.Fat..g., guideline$Total.Fat..g.)),
-              h4("Total Fat"),
-              p(paste(item$Total.Fat..g., "g"))
-          ),
-          div(class = "detail-card", style = paste("background-color:", get_color(item$Sugars..g., guideline$Sugars..g.)),
-              h4("Sugars"),
-              p(paste(item$Sugars..g., "g"))
-          ),
-          div(class = "detail-card", style = paste("background-color:", get_color(item$Salt.g, guideline$Salt.g)),
-              h4("Salt"),
-              p(paste(item$Salt.g, "g"))
-          )
+      get_font_color <- function(bg_color) {
+        if (bg_color == "#28a745" || bg_color == "#dc3545") {
+          return("white")
+        } else {
+          return("black")
+        }
+      }
+      
+      div(
+        h3(paste("What's in a", item$Item, "?"), class = "center-text"),
+        div(class = "item-details",
+            div(class = "detail-card", style = paste("background-color:", get_color(item$Calories, guideline$Calories), "; color:", get_font_color(get_color(item$Calories, guideline$Calories)), ";"),
+                h4("Calories"),
+                p(item$Calories)
+            ),
+            div(class = "detail-card", style = paste("background-color:", get_color(item$Total.Fat..g., guideline$Total.Fat..g.), "; color:", get_font_color(get_color(item$Total.Fat..g., guideline$Total.Fat..g.)), ";"),
+                h4("Total Fat"),
+                p(paste(item$Total.Fat..g., "g"))
+            ),
+            div(class = "detail-card", style = paste("background-color:", get_color(item$Sugars..g., guideline$Sugars..g.), "; color:", get_font_color(get_color(item$Sugars..g., guideline$Sugars..g.)), ";"),
+                h4("Sugars"),
+                p(paste(item$Sugars..g., "g"))
+            ),
+            div(class = "detail-card", style = paste("background-color:", get_color(item$Salt.g, guideline$Salt.g), "; color:", get_font_color(get_color(item$Salt.g, guideline$Salt.g)), ";"),
+                h4("Salt"),
+                p(paste(item$Salt.g, "g"))
+            )
+        )
       )
     } else {
       h4("No details available for this item.")
     }
   })
+  
   
   # Render the checklist of basket items with numeric inputs
   output$basket_checklist <- renderUI({
@@ -693,14 +717,21 @@ server <- function(input, output, session) {
           item <- basket_data[i, ]
           tags$li(
             paste(item$Item, "x", item$Quantity),
-            actionButton(inputId = paste0("remove_", item$Item), label = "Remove", class = "btn btn-danger btn-sm", onclick = sprintf("Shiny.onInputChange('%s', '%s')", "remove_item", item$Item))
+            actionButton(
+              inputId = paste0("remove_", item$Item),
+              label = "Remove",
+              style = "background-color: #dc3545; color: white; border: none; padding: 5px 10px; font-size: 12px; cursor: pointer;",
+              class = "btn-remove",
+              onclick = sprintf("Shiny.onInputChange('%s', '%s')", "remove_item", item$Item)
+            )
           )
         })
       )
     } else {
-      h4("Your basket is empty.")
+      tags$h4(style = "font-style: italic; font-weight: normal; font-size: 14px;", "Your basket is empty.")
     }
   })
+  
   
   # Function to get color based on percentage
   get_color <- function(percentage) {
@@ -737,7 +768,7 @@ server <- function(input, output, session) {
       color <- get_color(percentage)
       HTML(generate_progress_circle(percentage, color, "Calories"))
     } else {
-      h4("No items in the basket.")
+      h4("")
     }
   })
   
@@ -751,7 +782,7 @@ server <- function(input, output, session) {
       color <- get_color(percentage)
       HTML(generate_progress_circle(percentage, color, "Fat"))
     } else {
-      h4("No items in the basket.")
+      h4("")
     }
   })
   
@@ -765,7 +796,7 @@ server <- function(input, output, session) {
       color <- get_color(percentage)
       HTML(generate_progress_circle(percentage, color, "Sugars"))
     } else {
-      h4("No items in the basket.")
+      h4("")
     }
   })
   
@@ -779,7 +810,7 @@ server <- function(input, output, session) {
       color <- get_color(percentage)
       HTML(generate_progress_circle(percentage, color, "Salt"))
     } else {
-      h4("No items in the basket.")
+      h4("")
     }
   })
 }

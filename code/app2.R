@@ -210,7 +210,7 @@ ui <- fluidPage(
                                  ),
                                  column(6,
                                         div(class = "progress-circle",
-                                            h3("Basket as % of your daily nutrition goals"),
+                                            h3("Total Basket as % of your daily nutrition"),
                                             fluidRow(
                                               column(6, uiOutput("total_calories")),
                                               column(6, uiOutput("total_fat"))
@@ -756,13 +756,13 @@ server <- function(input, output, session) {
   # Function to generate SVG for progress circle with label
   generate_progress_circle <- function(percentage, color, label) {
     svg <- sprintf('
-      <svg width="100" height="100">
-        <circle cx="50" cy="50" r="45" stroke="%s" stroke-width="10" fill="none"
-                stroke-dasharray="%f %f" transform="rotate(-90 50 50)" />
-        <text x="50%%" y="45%%" text-anchor="middle" dy=".3em" font-size="11">%s</text>
-        <text x="50%%" y="55%%" text-anchor="middle" dy=".3em" font-size="9">%d%%</text>
-      </svg>
-    ', color, percentage * 2.83, 283 - percentage * 2.83, label, round(percentage))
+    <svg width="100" height="100">
+      <circle cx="50" cy="50" r="45" stroke="%s" stroke-width="10" fill="none"
+        stroke-dasharray="%f %f" transform="rotate(-90 50 50)" />
+      <text x="50%%" y="40%%" text-anchor="middle" dy=".3em" font-size="15">%d%%</text>
+      <text x="50%%" y="60%%" text-anchor="middle" dy=".3em" font-size="10">%s</text>
+    </svg>
+  ', color, percentage * 2.83, 283 - percentage * 2.83, round(percentage), label)
     return(svg)
   }
   

@@ -242,9 +242,8 @@ ui <- fluidPage(
                              ),
                              tags$div(class = "modal-footer",
                                       actionButton("suggest_healthier", "Suggest Healthier Alternative", class = "btn btn-success"),
-                                      actionButton("remove_other_items", "Remove Other Items", class = "btn btn-warning"),
                                       actionButton("confirm_add", "Add to Basket", class = "btn btn-primary"),
-                                      tags$button(type = "button", class = "btn btn-secondary", `data-dismiss` = "modal", "Close")
+                                      actionButton("remove_other_items", "Remove Other Items", class = "btn btn-warning", style = "background-color: mediumblue; color: white;")
                              )
                     )
            )
@@ -512,14 +511,27 @@ server <- function(input, output, session) {
       item <- item_data[1, ]
       guideline <- guideline_data[1, ]
       
-      # Find healthier alternatives
+      # Calculate current basket totals
+      current_basket <- basket()
+      total_calories <- sum(current_basket$Calories * current_basket$Quantity)
+      total_fat <- sum(current_basket$Total.Fat..g. * current_basket$Quantity)
+      total_sugars <- sum(current_basket$Sugars..g. * current_basket$Quantity)
+      total_salt <- sum(current_basket$Salt.g * current_basket$Quantity)
+      
+      # Calculate remaining nutritional limits
+      remaining_calories <- guideline$Calories - total_calories
+      remaining_fat <- guideline$Total.Fat..g. - total_fat
+      remaining_sugars <- guideline$Sugars..g. - total_sugars
+      remaining_salt <- guideline$Salt.g - total_salt
+      
+      # Find healthier alternatives within the remaining limits
       healthier_alternatives <- fastfood_data %>%
         filter(Company == selected_restaurant(),
                Category == input$category,
-               Calories <= guideline$Calories,
-               Total.Fat..g. <= guideline$Total.Fat..g.,
-               Sugars..g. <= guideline$Sugars..g.,
-               Salt.g <= guideline$Salt.g) %>%
+               Calories <= remaining_calories,
+               Total.Fat..g. <= remaining_fat,
+               Sugars..g. <= remaining_sugars,
+               Salt.g <= remaining_salt) %>%
         arrange(Calories, Total.Fat..g., Sugars..g., Salt.g) %>%
         head(3)
       
@@ -540,14 +552,6 @@ server <- function(input, output, session) {
                          )
                        ),
                        tags$tbody(
-                         tags$tr(
-                           tags$td(item$Item),
-                           tags$td(item$Calories),
-                           tags$td(item$Total.Fat..g.),
-                           tags$td(item$Sugars..g.),
-                           tags$td(item$Salt.g),
-                           tags$td()
-                         ),
                          lapply(1:nrow(healthier_alternatives), function(i) {
                            alt_item <- healthier_alternatives[i, ]
                            tags$tr(
@@ -565,7 +569,7 @@ server <- function(input, output, session) {
         })
       } else {
         output$healthier_alternatives <- renderUI({
-          h4("No healthier alternatives available.")
+          h4("No healthier alternatives available. Try a different category.")
         })
       }
     }

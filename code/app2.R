@@ -3,8 +3,8 @@ library(dplyr)
 library(shinyjs)
 
 # Read the data
-fastfood_data <- read.csv("/Users/felixculas/shiny/fd2p2024/processed_data/fastfood_categoryset.csv", header = TRUE)
-uk_guidelines <- read.csv("/Users/felixculas/shiny/fd2p2024/processed_data/guidelines_workingset.csv", header = TRUE)
+fastfood_data <- read.csv("../processed_data/fastfood_categoryset.csv", header = TRUE)
+uk_guidelines <- read.csv("../processed_data/guidelines_workingset.csv", header = TRUE)
 
 # Get unique company names
 unique_companies <- unique(fastfood_data$Company)
